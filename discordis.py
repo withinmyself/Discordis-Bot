@@ -21,12 +21,24 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-    await client.send_message(member, "Please enter your In-Game-Name for Warframe")
-    ign = await client.wait_for_message(member, author=member)
-    member = Member(user=str(member), ign=str(ign.content), planet='Not Set', quest='Not Set')
-    session = Session()
-    session.add(member)
-    session.commit()
+    new_chan = str(member)
+
+    await client.create_channel(member.server, new_chan)
+    for server in client.servers:
+        for channel in server.channels:
+            if channel.name == new_chan:
+                invite = await client.create_invite(channel)
+                await member.accept_invite(invite)
+                await client.send_message(member.channel, "Please enter your In-Game-Name for Warframe")
+                break
+
+
+    
+    #ign = await client.wait_for_message(member, author=member)
+    #member = Member(user=str(member), ign=str(ign.content), planet='Not Set', quest='Not Set')
+    #session = Session()
+    #session.add(member)
+    #session.commit()
     
 
 @client.event
