@@ -112,7 +112,7 @@ async def on_message(message):
             # Initialize if not.  Only populate 'user' Column
             await client.send_message(message.channel, "Discordis needs to add you to The Database.  Please type your In-Game-Name and hit enter")
             ign = await client.wait_for_message(author=message.author)
-            current = Member(user=str(message.author), ign=str(ign.content), planet=' ', quest=' ', priority=' ')
+            current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set')
             await client.send_message(message.channel, "Discordis found success in this endeavor.  Welcome to The Database {0}".format(ign.content))
         else:
             pass
@@ -140,7 +140,7 @@ async def on_message(message):
         if current == None:
             await client.send_message(message.channel, "Discordis needs to add you to The Database.  Please type your In-Game-Name and hit enter.")
             ign = await client.wait_for_message(author=message.author)
-            current = Member(user=str(message.author), ign=str(ign.content), planet=' ', quest=' ', priority=' ')
+            current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set')
             await client.send_message(message.channel, "Discordis found success in this endeavor.  Welcome to The Database {0}".format(ign.content))
         else:
             pass
@@ -165,7 +165,7 @@ async def on_message(message):
         if current == None:
             await client.send_message(message.channel, "Discordis needs to add you to The Database.  Please type your In-Game-Name and hit enter.")
             ign = await client.wait_for_message(author=message.author)
-            current = Member(user=str(message.author), ign=str(ign.content), planet=' ', quest=' ', priority=' ')
+            current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set')
             await client.send_message(message.channel, "Discordis found success in this endeavor.  Welcome to The Database {0}".format(ign.content))
         else:
             pass
@@ -206,15 +206,13 @@ async def on_message(message):
             title = 'Warframe Status',
             description = 'Database Information For Members Of Senua Black',
             colour = discord.Colour.red()
-            )
-            # embed.set_image(url='https://i.imgur.com/6cyxnVY.png')
+        )
+        
         embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-        embed.set_author(name=str(self_object.user),
-        icon_url=client.user.default_avatar_url)
-        embed.add_field(name='IGN', value=self_object.ign, inline=True)
-        embed.add_field(name='Furthest Planet', value=self_object.planet, inline=True)
-        embed.add_field(name='Current Quest', value=self_object.quest, inline=True)
-        embed.add_field(name='Biggest Priority', value=self_object.priority, inline=False)          
+        embed.set_author(name=self_object.ign, icon_url='https://i.imgur.com/6cyxnVY.png')
+        embed.add_field(name="Furthest Planet", value=self_object.planet)
+        embed.add_field(name="Current Quest", value=self_object.quest)
+        embed.add_field(name="Biggest Priority", value=self_object.priority, inline=False)
         await client.send_message(message.channel, embed=embed)
     else:
         pass

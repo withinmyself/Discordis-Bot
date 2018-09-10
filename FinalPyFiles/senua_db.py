@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy import Sequence
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:///:memory:',  echo=True)
+engine = create_engine('postgresql://postgres:wastedPenguin27.@localhost:5432/postgres',  echo=True)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
