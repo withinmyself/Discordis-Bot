@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy import Sequence
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('postgresql://postgres:wastedPenguin27.@localhost:5432/postgres',  echo=True)
+engine = create_engine('postgresql://postgres:wastedPenguin27.@localhost:5432/senua_db',  echo=True)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
@@ -19,9 +19,10 @@ class Member(Base):
         planet = Column(String)
         quest = Column(String)
         priority = Column(String)
+        syndicate = Column(String)
         def __repr__(self):
-            return "<Member #{4}(User={0}, IGN={1}, Planet={2}, Quest={3}, Priority={5})>".format(
-                                                                        self.user, self.ign, self.planet, self.quest, self.id, self.priority)
+            return "<Member #{4}(User={0}, IGN={1}, Planet={2}, Quest={3}, Priority={5}, Syndicate={6})>".format(
+                                                                        self.user, self.ign, self.planet, self.quest, self.id, self.priority, self.syndicate)
 
 class Clan(Base):
         __tablename__ = 'clans'
