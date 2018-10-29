@@ -108,7 +108,7 @@ async def on_message(message):
         embed = discord.Embed(
         colour = discord.Colour.red()
         )
-        botInfo = "Discordis is our in-house bot that is able to take information from you at any time and save it to your Senua Black profile.  \n \n $PLANET - The furthest planet you've reached so far.\n $QUEST - The current Warframe Quest you are tackling.\n $PRIORITY -  What you are currently fixated on more than anything else in Warframe.\n $SYNDICATE - Enter one Syndicate that you are affiliated with.  This also assigns you a Syndicate Role that is mentionable.\n\n $FIND - Type in the In-Game-Name of a Senua Black member and retrieve any information that individual has saved.\n $ALL - Displays a list of all Senua Black members with any information they have saved.\n $MYSELF - Displays your own personal information."
+        botInfo = "Discordis is our in-house bot that is able to take information from you at any time and save it to your Senua Black profile.  \n \n $PLANET - The furthest planet you've reached so far.\n $QUEST - The current Warframe Quest you are tackling.\n $PRIORITY -  What you are currently fixated on more than anything else in Warframe.\n $ADDSYNDICATE - This will add a Syndicate Role that is mentionable.\n\n $REMOVESYNDICATE - This will remove a syndicate role. \n\n $FIND - Type in the In-Game-Name of a Senua Black member and retrieve any information that individual has saved.\n $ALL - Displays a list of all Senua Black members with any information they have saved.\n $MYSELF - Displays your own personal information. \n\n We will have more Warframe commands soon but for now you can type $EARTH and it will tell you if it is Day or Night"
         embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
         embed.add_field(name="Discordis", value=botInfo)
         await client.send_message(message.channel, embed=embed)
@@ -175,7 +175,7 @@ async def on_message(message):
     
     # Third of three if statements
     if message.content.upper() == '$PRIORITY':
-        await client.send_message(message.channel, "Please type the name of your current Quest and hit enter")
+        await client.send_message(message.channel, "What's at the top of your Warframe Bucketlist?")
         priority = await client.wait_for_message(author=message.author)
         session = Session()
         current = session.query(Member).filter_by(user=str(priority.author)).first() 
@@ -200,7 +200,7 @@ async def on_message(message):
 
 
     # Command that allows members to set syndicates as roles for mentions.
-    if message.content.upper() == '$SYNDICATE':
+    if message.content.upper() == '$ADDSYNDICATE':
         await client.send_message(message.channel, "Type in the name of a Syndicate you would like to add and hit enter.  Make sure you type it in exactly as it appears in the game: New Loka, Cephalon Suda, Steel Meridian, Red Veil, Arbiters Of Hexis, The Perrin Sequence")
         add_syndicate = await client.wait_for_message(author=message.author)
         syndicate_str = str(add_syndicate.content)
@@ -210,36 +210,33 @@ async def on_message(message):
                 for role in server.roles:
                     if role.name.upper() == syndicate_str.upper():
                         await client.add_roles(message.author, role)
-                        new_role = role.name
+                        await client.send_message(message.channel, "Good to go!!")
                         break
                     else:
                         continue
-            await client.send_message(message.channel, "You have succesfully added {0} as a mentionable role with Discord.  What level are you currently at with this syndicate?".format(new_role))
-            level = await client.wait_for_message(author=message.author)
-            level_str = str(level.content)
-            level_int = [int(s) for s in level_str.split() if s.isdigit()][0]
-            await client.send_message(message.channel, "Just to make sure everything is correct.  You are in {0} and are currently at Level {1}. Is this correct? Type Yes or No".format(new_role, level_int))
-            answer = await client.wait_for_message(author=message.author)
-            if str(answer.content).upper() == 'YES':
-                session = Session()
-                current = session.query(Member).filter_by(user=str(answer.author)).first()
-                if current == None:
-                    await client.send_message(message.channel, "Discordis needs to add you to The Database.  Please type your In-Game-Name and hit enter.")
-                    ign = await client.wait_for_message(author=message.author)
-                    current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
-                    await client.send_message(message.channel, "Discordis found success in this endeavor.  Welcome to The Database {0}".format(ign.content))
-                else:
-                    pass
-                current.syndicate = "Level {0}, {1}".format(level_int,  syndicate_str)
-                session.add(current)
-                session.commit()
-                await client.send_message(message.channel, "Information has been saved to The Database. ")
-            else:
-                await client.send_message(message.channel,  "Then try again.  Further development needed to assist midway through.  Try starting over with $SYNDICATE  Make sure you type in everything correctly and have only 1 number that is 0-5 for you Level.    If you still have issues please let me know  - withinmyself")
         else:
             await client.send_message(message.channel, "Make sure you type the syndicates name exactly how it is in Warframe (Use the given reference list).  Type $SYNDICATE and try again.")
     else:
         pass
+
+    if message.content.upper() == '$REMOVESYNDICATE':
+        await client.send_message(message.channel, "Type the name of Syndicate you would like to remove.   Make sure you type it in exactly as it appears in the game: New Loka, Cephalon Suda, Steel Meridian, Red Veil, Arbiters Of Hexis, The Perrin Sequence")
+        syn_gone = await client.wait_for_message(author = message.author)
+        synGone_str = str(syn_gone.content)
+        syndicates = ('NEW LOKA', 'CEPHALON SUDA', 'STEEL MERIDIAN', 'RED VEIL', 'ARBITERS OF HEXIS', 'THE PERRIN SEQUENCE')
+        if synGone_str.upper() in syndicates:
+            for server in client.servers:
+                for role in server.roles:
+                    if role.name.upper() == synGone_str.upper():
+                        await client.remove_roles(message.author, role)
+                        await client.send_message(message.channel, "Gone baby gone!!")
+                        break
+                    else:
+                        continue
+        else:
+            await client.send_message(message.channel, "Make sure you type the syndicates name exactly how it is in Warframe (Use the given reference list).  Type $REMOVESYNDICATE and try again.")
+
+        
 
     if message.content.upper() == '$FIND':
         await client.send_message(message.channel, "Type in the IGN of the member you'd like to look up")
@@ -264,10 +261,36 @@ async def on_message(message):
         await client.send_message(message.channel, embed=embed)
     else:
         pass
-    
 
+    if message.content.upper() == '$MYSELF':
+        userStr = str(message.author)
+        session = Session()
+        self_object = session.query(Member).filter_by(user=userStr).first()
+        
+        
+        embed = discord.Embed(
+            title = 'Warframe Data',
+            description = 'Information For Members Of Senua Black',
+            colour = discord.Colour.red()
+        )
+        
+        embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+        embed.set_author(name=self_object.ign, icon_url='https://i.imgur.com/6cyxnVY.png')
+        embed.add_field(name="Furthest Planet", value=self_object.planet)
+        embed.add_field(name="Current Quest", value=self_object.quest)
+        embed.add_field(name="Biggest Priority", value=self_object.priority, inline=False)
+        await client.send_message(message.channel, embed=embed)
+    else:
+        pass
 
-
+    if message.content.upper() == "$EARTH":
+        req = Request('https://api.warframestat.us/pc/cetusCycle', headers={'User-Agent': 'Mozilla/5.0'})
+        webpage = urlopen(req).read()
+        data = json.loads(webpage)
+        if data['isDay'] == True:
+            await client.send_message(message.channel, "It Is Currently Day Time On Earth With {} Left Until Night".format(data['timeLeft']))
+        if data['isDay'] == False:
+            await client.send_message(channel, "It Is Currently Night Time On Earth With {} Left Until Morning".format(data['timeLeft']))    
 
 
 # Using Redis to store my Discord Token.
