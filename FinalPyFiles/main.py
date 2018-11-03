@@ -145,7 +145,39 @@ async def on_member_join(member):
 @client.event
 async def on_message(message):
 
-    # Display Senua Black Mission Statement.
+    # Test case for monitoring separate individuals perpetrating more than one offense
+    destinyTwo = str(message.content.upper())
+    if 'DESTINY' in destinyTwo and 'SUCKS' not in destinyTwo:
+        if redis_server.get('{0}_no'.format(str(message.author))) == None:
+            redis_server.set('{0}_no'.format(str(message.author)), 0)
+        else:
+            pass
+        violations = redis_server.incr('{0}_no'.format(str(message.author)))
+        if violations == 1:
+            await client.send_message(message.channel, "You have violated one of Senua Blacks policies by speaking of this subject.  This is your first offense.")
+        if violations == 2:
+            await client.send_message(message.channel, "This is the second time you have chosen to speak that which is unspeakable.  Let us never speak of this again.")
+        if violations == 3:
+            await client.send_message(message.channel, "Thrice now you have stained this screen with blasphemous nonsense! No more I say! A penance will be wrought if your actions continue!")
+        if violations == 4:
+            await client.send_message(message.channel, "You leave me no choice but to retaliate!  I hope you're ready for this!")
+            await client.send_message(message.channel, "**Destiny sucks!**")
+        if violations >= 5:
+            await client.send_message(message.channel, "**Destiny sucks!**")
+    else:
+        pass
+    
+    # After repeated violations we start sending a private message to the user every time they post anything at all
+    if  redis_server.get('{0}_no'.format(str(message.author))) != None:
+        if  int(str(redis_server.get('{0}_no'.format(str(message.author))).decode('utf-8'))) > 5:
+            await client.send_message(message.author, "**Destiny sucks!**")
+
+    # Resets violation counter to stop retaliation
+    if message.content.upper() == '$INIT':
+        redis_server.set('{0}_no'.format(str(message.author)), 0)
+    else:
+        pass
+
     if message.content.upper() == '$INFO':
         await client.send_message(message.channel, embed=botEmbed)
     else:
