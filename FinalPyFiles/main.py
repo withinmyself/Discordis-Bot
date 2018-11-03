@@ -169,7 +169,7 @@ async def on_message(message):
     
     # After repeated violations we start sending a private message to the user every time they post anything at all
     if  redis_server.get('{0}_no'.format(str(message.author))) != None:
-        if  int(str(redis_server.get('{0}_no'.format(str(message.author))).decode('utf-8'))) > 5:
+        if  int(str(redis_server.get('{0}_no'.format(str(message.author))).decode('utf-8'))) >= 4:
             await client.send_message(message.author, "**Destiny sucks!**")
 
     # Resets violation counter to stop retaliation
@@ -177,7 +177,8 @@ async def on_message(message):
         redis_server.set('{0}_no'.format(str(message.author)), 0)
     else:
         pass
-
+    
+    # Display Senua Black Information
     if message.content.upper() == '$INFO':
         await client.send_message(message.channel, embed=botEmbed)
     else:
@@ -189,66 +190,90 @@ async def on_message(message):
     else:
         pass
 
+    # Every command that allows a user to add/change information to the database
+    # automatically checks to see if that user has even been added.  If they haven't then it will ask
+    # for their IGN and it will set the rest of the values to 'Not Set'.  Whatever piece of information
+    # the user was trying to add will continue like normal after that is done.
+
+    # Change/Add your in-game-name
     if message.content.upper() == '$IGN':
-            # Initialize if not. 
         await client.send_message(message.channel, "Type in your correct IGN and hit [ENTER].")
         ign = await client.wait_for_message(author=message.author)
         session = Session()
         current = session.query(Member).filter_by(user=str(ign.author)).first()
+        
+        # Is User in Database?  We don't ask the user for their IGN if they are not because they have already given it to us
         if current == None:
             current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
             await client.send_message(message.channel, success.format(ign.content))
         else:
             current.ign = str(ign.content)
+
+            # Commit to The Database
             session.add(current)
             session.commit()
             await client.send_message(message.channel, success.format(ign.content))
     else:
         pass
 
-    # Add Planet.
+    # Add Planet
     if message.content.upper() == '$PLANET':
         await client.send_message(message.channel, "Please type the furthest Planet you've unlocked and hit enter.")
         planet = await client.wait_for_message(author=message.author)
         session = Session()
         current = session.query(Member).filter_by(user=str(planet.author)).first() 
 
-        # Check to see if member has been added to our database
+        # Check if User is in Database
         if current == None:
-            # Initialize if not. 
+
+            # If not then ask the User for their IGN
             await client.send_message(message.channel, addMember)
             ign = await client.wait_for_message(author=message.author)
+            # Initialize new Member Object
             current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
+            # Send success message to channel
             await client.send_message(message.channel, success.format(ign.content))
         else:
             pass
-
+        
+        # Continue adding the given Planet
         current.planet = str(planet.content)
+
+        # Commit to The Database
         session.add(current)
         session.commit()
         await client.send_message(message.channel, "{0} has been saved as the furthest Planet you've unlocked.  Use $MYSELF to see everything The Database knows about you.".format(current.planet))
-
         if debug == True:
             print("Planet Added - {}".format(current.planet))
     else:
 	    pass
 
-    # Add Quest.
+    # Add Quest
     if message.content.upper() == '$QUEST':
         await client.send_message(message.channel, "Please type the name of your current Quest and hit enter")
         quest = await client.wait_for_message(author=message.author)
         session = Session()
         current = session.query(Member).filter_by(user=str(quest.author)).first() 
 
+        # Check if User is in Database
         if current == None:
+
+            # Ask for IGN if not 
             await client.send_message(message.channel, addMember)
             ign = await client.wait_for_message(author=message.author)
+
+            # Initialize new Member Object with IGN
             current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
+
+            # Send success message to channel
             await client.send_message(message.channel,success.format(ign.content))
         else:
             pass
         
+        # Continue adding the given Quest
         current.quest = str(quest.content)
+
+        # Commit to The Database
         session.add(current)
         session.commit()
         await client.send_message(message.channel, "{0} has been saved as your current Quest.    Use $MYSELF to see everything The Database knows about you.".format(current.quest))
@@ -264,16 +289,21 @@ async def on_message(message):
         priority = await client.wait_for_message(author=message.author)
         session = Session()
         current = session.query(Member).filter_by(user=str(priority.author)).first() 
-
+        
+        # Check if User is in Database
         if current == None:
             await client.send_message(message.channel, addMember)
             ign = await client.wait_for_message(author=message.author)
+            # Initialize new Member Object
             current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
             await client.send_message(message.channel, success.format(ign.content))
         else:
             pass
         
+        # Continue adding Priority
         current.priority = str(priority.content)
+
+        # Commit to The Database
         session.add(current)
         session.commit()
         await client.send_message(message.channel, "{0} has been set as your top priority.   Use $MYSELF to see everything The Database knows about you.".format(current.priority))
@@ -283,6 +313,12 @@ async def on_message(message):
     else:
 	    pass
 
+    # The following Syndicate commands do not interact with The Database.
+    # They add a new role to the User.  These roles are already created.
+    # All the syndicate names are saved in syndicates which is imported from strings.py.
+    # If the User does not type in an exact match for one of the syndicates in that string
+    # it will tell them to start over.  None of the Bot commands are case sensative as all 
+    # messages are converted to uppercase before being checked against uppercase options.
 
     # Add Syndicate Role
     if message.content.upper() == '$ADDSYNDICATE':
@@ -325,7 +361,7 @@ async def on_message(message):
             await client.send_message(message.channel,  tryAgain)
 
         
-    # Search tool.  Search Database with IGN.
+    # Search Database with IGN then display that Users information
     if message.content.upper() == '$FIND':
         await client.send_message(message.channel, "Type the IGN of the member you'd like to look up and hit [ENTER]")
         current_ign = await client.wait_for_message(author=message.author)
@@ -344,7 +380,7 @@ async def on_message(message):
     else:
         pass
 
-    # Returns Database information on self.
+    # Returns Database information on self
     if message.content.upper() == '$MYSELF':
         userStr = str(message.author)
         session = Session()
@@ -361,7 +397,7 @@ async def on_message(message):
     else:
         pass
 
-    # Return Day/Night Information for Cetus/Earth in Warframe.
+    # Day/Night Information for Cetus/Earth in Warframe.
     if message.content.upper() == "$EARTH":
         req = Request('https://api.warframestat.us/pc/cetusCycle', headers={'User-Agent': 'Mozilla/5.0'})
         webpage = urlopen(req).read()
@@ -371,7 +407,7 @@ async def on_message(message):
         if data['isDay'] == False:
             await client.send_message(channel, "It Is Currently Night Time On Earth With {} Left Until Morning".format(data['timeLeft']))    
     
-    # Return information on The Void Trader.
+    # Return information on The Void Trader in Warframe.
     baroMsg = str(message.content.upper())
     if ("WHEN" in baroMsg and "BARO" in baroMsg) or baroMsg == "$TRADER":
         req = Request('https://api.warframestat.us/pc/voidTrader', headers={'User-Agent': 'Mozilla/5.0'})
@@ -384,6 +420,7 @@ async def on_message(message):
         if data['active'] == True:
             inventory = data['inventory']
 
+            # Return inventory as formated text to the channel.
             await client.send_message(message.channel, "The Void Trader has already arrived!!  You'll find him at {0}.  He will be leaving in {1}.  Check out what he brought!!\n\n".format(data['location'], data['endString']))
             for stuff in inventory:
                 await client.send_message(message.channel, "**{0}**  *Ducats:* __{1}__  *Credits:* __{2}__".format(stuff['item'], stuff['ducats'], stuff['credits']))
@@ -392,7 +429,7 @@ async def on_message(message):
     else:
         pass
     
-    # Check if there are Endless Fissures available and displays their information
+    # Check if any Endless Fissures are available and display information
     if message.content.upper() == '$ENDLESS':
         req = Request('https://api.warframestat.us/pc/fissures', headers={'User-Agent': 'Mozilla/5.0'})
         webpage = urlopen(req).read()
@@ -449,10 +486,7 @@ async def on_message(message):
 
     # Everything below this comment is used for Administrative purposes
     # Admin functions called inside Discord require a Secret Key to activate
-
-
-
-
+    # The Secret Key is stored in Redis
 
     if message.content.upper() == '$KILL':
         await client.send_message(message.channel, "Admin Kill Command")
@@ -467,5 +501,5 @@ async def on_message(message):
         pass
 
 
-# Using Redis to store Discord Token.
+# Use Redis to store Discord Token.
 client.run(redis_server.get('SENUA_TOKEN').decode('utf-8'))
