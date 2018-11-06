@@ -9,9 +9,10 @@ from discord.ext import commands
 from urllib.request import Request, urlopen
 
 from senua_db import Member, Session, Base, engine
-from strings import botInfo, welcome, ignAdd, senuaMission, addMember, syndicateRole, syndicates, tryAgain, success
-
-
+from strings import botInfo, welcome, ignAdd, \
+    addMember, syndicateRole, syndicates, tryAgain, success, \
+    recruitMessage, rulesOne, rulesTwo, titles, missionStatement, \
+    welcomeMessage
 
 
 Client = discord.Client()
@@ -20,16 +21,6 @@ redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 # Turn on various print statements that verify functions and database access
 debug=True
-
-# Embed One.  $INFO
-botEmbed = discord.Embed(colour = discord.Colour.red())
-botEmbed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-botEmbed.add_field(name="Senua Black", value=senuaMission)
-
-# Embed Two. $HELP
-botEmbedTwo = discord.Embed(colour = discord.Colour.red())
-botEmbedTwo.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-botEmbedTwo.add_field(name="Senua Black", value=botInfo)
 
 
 # If 'Discordis Bot Ready' prints to terminal then the bot has successfully started in Discord
@@ -131,6 +122,24 @@ async def on_member_join(member):
     else:
         pass
 
+    embed = discord.Embed(colour = discord.Colour.red())
+    embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+    embed.add_field(name="Senua Black", value=missionStatement)
+    await client.send_message(member, embed=embed)
+    embed = discord.Embed(colour = discord.Colour.red())
+    embed.set_thumbnail(url='https://i.imgur.com/priNXCM.jpg')
+    embed.add_field(name="Discordis", value=botInfo)
+    await client.send_message(member, embed=embed)
+    embed = discord.Embed(colour = discord.Colour.red())
+    embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+    embed.add_field(name="Guidelines For Senua Black", value=rulesOne)
+    await client.send_message(member, embed=embed)
+    embed = discord.Embed(colour = discord.Colour.red())
+    embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+    embed.add_field(name="Guidelines For Senua Black", value=rulesTwo)
+    await client.send_message(member, embed=embed)
+    
+
     for server in client.servers:
         for role in server.roles:
             if role.name == 'New Arrival':
@@ -168,9 +177,9 @@ async def on_message(message):
         pass
     
     # After repeated violations we start sending a private message to the user every time they post anything at all
-    if  redis_server.get('{0}_no'.format(str(message.author))) != None:
-        if  int(str(redis_server.get('{0}_no'.format(str(message.author))).decode('utf-8'))) >= 4:
-            await client.send_message(message.author, "**Destiny sucks!**")
+    # if  redis_server.get('{0}_no'.format(str(message.author))) != None:
+        # if  int(str(redis_server.get('{0}_no'.format(str(message.author))).decode('utf-8'))) >= 4:
+            # await client.send_message(message.author, "**Destiny sucks!**")
 
     # Resets violation counter to stop retaliation
     if message.content.upper() == '$INIT':
@@ -180,15 +189,50 @@ async def on_message(message):
     
     # Display Senua Black Information
     if message.content.upper() == '$INFO':
-        await client.send_message(message.channel, embed=botEmbed)
+        embed = discord.Embed(colour = discord.Colour.red())
+        embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+        embed.add_field(name="Senua Black", value=missionStatement)
+        await client.send_message(message.channel, embed=embed)
+        embed = discord.Embed(colour = discord.Colour.red())
+        embed.set_thumbnail(url='https://i.imgur.com/priNXCM.jpg')
+        embed.add_field(name="Discordis", value=botInfo)
+        await client.send_message(message.channel, embed=embed)
     else:
         pass
 
-    # Display Bot commands.
+    # Display Bot commands
     if message.content.upper() == '$HELP':
-        await client.send_message(message.channel, embed=botEmbedTwo)
+        embed = discord.Embed(colour = discord.Colour.red())
+        embed.set_thumbnail(url='https://i.imgur.com/priNXCM.jpg')
+        embed.add_field(name="Discordis Bot Commands", value=botInfo)
+        await client.send_message(message.channel, embed=embed)
     else:
         pass
+
+    # Display Recruitment Message
+    if message.content.upper() == '$RECRUIT':
+        await client.send_message(message.channel, recruitMessage)
+        await client.send_message(message.channel, "\n\nDiscord Invite:   https://discord.gg/YZMXwtX")
+
+    # Display Rules
+    if message.content.upper() == '$RULES':
+        embed = discord.Embed(colour = discord.Colour.red())
+        embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+        embed.add_field(name="Guidelines For Senua Black", value=rulesOne)
+        await client.send_message(message.channel, embed=embed)
+        embed = discord.Embed(colour = discord.Colour.red())
+        embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+        embed.add_field(name="Guidelines For Senua Black", value=rulesTwo)
+        await client.send_message(message.channel, embed=embed)
+
+    # Display Titles
+    if message.content.upper() == '$TITLES':
+        embed = discord.Embed(colour = discord.Colour.red())
+        embed.set_thumbnail(url='https://i.imgur.com/priNXCM.jpg')
+        embed.add_field(name="Titles", value=titles)
+        await client.send_message(message.channel, embed=embed)
+
+
 
     # Every command that allows a user to add/change information to the database
     # automatically checks to see if that user has even been added.  If they haven't then it will ask
@@ -205,14 +249,13 @@ async def on_message(message):
         # Is User in Database?  We don't ask the user for their IGN if they are not because they have already given it to us
         if current == None:
             current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
-            await client.send_message(message.channel, success.format(ign.content))
-        else:
-            current.ign = str(ign.content)
-
-            # Commit to The Database
             session.add(current)
             session.commit()
-            await client.send_message(message.channel, success.format(ign.content))
+        else:
+            current.ign = str(ign.content)
+            session.add(current)
+            session.commit()
+        await client.send_message(message.channel, success.format(ign.content))
     else:
         pass
 
@@ -247,6 +290,40 @@ async def on_message(message):
             print("Planet Added - {}".format(current.planet))
     else:
 	    pass
+
+    # Add Main Frame
+    if message.content.upper() == '$FRAME':
+        await client.send_message(message.channel, "What Warframe do you use the most?")
+        frame = await client.wait_for_message(author=message.author)
+        session = Session()
+        current = session.query(Member).filter_by(user=str(frame.author)).first() 
+
+        # Check if User is in Database
+        if current == None:
+
+            # If not then ask the User for their IGN
+            await client.send_message(message.channel, addMember)
+            ign = await client.wait_for_message(author=message.author)
+            # Initialize new Member Object
+            current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
+            # Send success message to channel
+            await client.send_message(message.channel, success.format(ign.content))
+        else:
+            pass
+        
+        # Continue adding the given Planet
+        current.syndicate = str(frame.content)
+
+        # Commit to The Database
+        session.add(current)
+        session.commit()
+        await client.send_message(message.channel, "{0} has been saved as your most used Warframe.  Use $MYSELF to see everything The Database knows about you.".format(current.syndicate))
+        if debug == True:
+            print("Frame Added - {}".format(current.syndicate))
+    else:
+	    pass
+
+
 
     # Add Quest
     if message.content.upper() == '$QUEST':
@@ -368,15 +445,19 @@ async def on_message(message):
         ign_str = str(current_ign.content)
         session = Session()
         self_object = session.query(Member).filter_by(ign=ign_str).first()
-        embed = discord.Embed (title = 'Warframe Status',
-	    description = 'Database Information For Members Of Senua Black',
-	    colour = discord.Colour.red())
-        embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-        embed.set_author(name=self_object.ign, icon_url='https://i.imgur.com/6cyxnVY.png')
-        embed.add_field(name="Furthest Planet", value=self_object.planet)
-        embed.add_field(name="Current Quest", value=self_object.quest)
-        embed.add_field(name="Biggest Priority", value=self_object.priority, inline=False)
-        await client.send_message(message.channel, embed=embed)
+        if self_object != None:
+            embed = discord.Embed (title = 'Warframe Status',
+	        description = 'Database Information',
+	        colour = discord.Colour.red())
+            embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+            embed.set_author(name=self_object.ign, icon_url='https://i.imgur.com/6cyxnVY.png')
+            embed.add_field(name="Furthest Planet", value=self_object.planet)
+            embed.add_field(name="Current Quest", value=self_object.quest)
+            embed.add_field(name="Main Frame", value=self_object.syndicate)
+            embed.add_field(name="Top Priority", value=self_object.priority, inline=False)
+            await client.send_message(message.channel, embed=embed)
+        else:
+            await client.send_message(message.channel, "There is no user in The Database that goes by that IGN.")
     else:
         pass
 
@@ -385,18 +466,34 @@ async def on_message(message):
         userStr = str(message.author)
         session = Session()
         self_object = session.query(Member).filter_by(user=userStr).first()
+        if self_object == None:
+            await client.send_message(message.channel, addMember)
+            ign = await client.wait_for_message(author=message.author)
+            # Initialize new Member Object
+            current = Member(user=str(message.author), ign=str(ign.content), planet='Not Set', quest='Not Set', priority='Not Set', syndicate='Not Set')
+            await client.send_message(message.channel, success.format(ign.content))
+        else:
+            pass
         embed = discord.Embed (title = 'Warframe Status',
-	    description = 'Database Information For Members Of Senua Black',
+	    description = 'Database Information',
 	    colour = discord.Colour.red())
         embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
         embed.set_author(name=self_object.ign, icon_url='https://i.imgur.com/6cyxnVY.png')
         embed.add_field(name="Furthest Planet", value=self_object.planet)
         embed.add_field(name="Current Quest", value=self_object.quest)
-        embed.add_field(name="Biggest Priority", value=self_object.priority, inline=False)
+        embed.add_field(name="Main Frame", value=self_object.syndicate)
+        embed.add_field(name="Top Priority", value=self_object.priority, inline=False)
         await client.send_message(message.channel, embed=embed)
     else:
         pass
 
+    # All Database Information
+    if message.content.upper() == '$ALL':
+        session = Session()
+        allMembers = session.query(Member).all()
+        for member in allMembers:
+            await client.send_message(message.channel, "**Member:** *{0}*        **Furthest Planet:** *{1}*\n**Current Quest:** *{2}*        **Main Frame:** *{3}*\n**Top Priority:** *{4}*\n\n\n".format(
+                                                                                                    member.ign, member.planet, member.quest, member.syndicate, member.priority))
     # Day/Night Information for Cetus/Earth in Warframe.
     if message.content.upper() == "$EARTH":
         req = Request('https://api.warframestat.us/pc/cetusCycle', headers={'User-Agent': 'Mozilla/5.0'})
@@ -487,19 +584,32 @@ async def on_message(message):
     # Everything below this comment is used for Administrative purposes
     # Admin functions called inside Discord require a Secret Key to activate
     # The Secret Key is stored in Redis
-
+    
+    # Kill Discordis
     if message.content.upper() == '$KILL':
         await client.send_message(message.channel, "Admin Kill Command")
         await client.send_message(message.channel, "Type Secret Key")
         secretKey = await client.wait_for_message(author = message.author)
         if str(secretKey.content) == redis_server.get('SECRET_KEY').decode('utf-8'):
             await client.send_message(message.channel, "Key Accepted.  Discordis Killed")
+            await client.purge_from(message.channel, limit=5)
             await client.logout()
         else:
             await client.send_message(message.channel, "Wrong Key.   Start Over.")
     else:
         pass
 
-
+    # Clear 100 lines in current channel
+    if message.content.upper() == '$CLEAR':
+        await client.send_message(message.channel, "Admin Clear Command")
+        await client.send_message(message.channel, "Type Secret Key")
+        secretKey = await client.wait_for_message(author = message.author)
+        if str(secretKey.content) == redis_server.get('SECRET_KEY').decode('utf-8'):
+            await client.send_message(message.channel, "Key Accepted")
+            await client.purge_from(message.channel, limit=100)      
+        else:
+            await client.send_message(message.channel, "Wrong Key. Start Over.")
+    else:
+        pass 
 # Use Redis to store Discord Token.
 client.run(redis_server.get('SENUA_TOKEN').decode('utf-8'))
