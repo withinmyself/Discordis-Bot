@@ -46,16 +46,34 @@ async def on_member_join(member):
         for channel in server.channels:
             if channel.name == 'welcome':
                 await client.purge_from(channel, limit=100)
-                redis_server.set('WELCOME{0}'.format(x), 'welcome_{0:{1}}'.format(member.name, len(member.name) - 4))
-                redis_server.set('USER{0}'.format(x), '{0:{1}}'.format(member.name, len(member.name) - 4))
-                await client.edit_channel(channel, name=redis_server.get('WELCOME{0}'.format(x)).decode('utf-8'))
+                try:
+                    redis_server.set('WELCOME{0}'.format(str(x)), 'welcome_{0:{1}}'.format(member.name, len(member.name) - 4))
+                    redis_server.set('USER{0}'.format(str(x)), '{0:{1}}'.format(member.name, len(member.name) - 4))
+                    await client.edit_channel(channel, name=redis_server.get('WELCOME{0}'.format(x)).decode('utf-8'))
+                    await client.send_message(channel,welcome.format(
+                                            member.name, len(member.name) - 4))
+                    break
+                except ValueError(e):
+                    await client.edit_channel(channel, name=redis_server.get('WELCOME{0}'.format(x)).decode('utf-8'))
+                    await client.send_message(channel,welcome.format(
+                                            member.name, len(member.name) - 4))
+                    print('ValueError -> {0}'.format(e))
+                    break
+            else:
+                continue
+        break
 
-                await client.send_message(channel,welcome.format(
-                                        member.name, len(member.name) - 4))
+    for server in client.servers:
+        for role in server.roles:
+            if role.name == 'New Arrival':
+                denyAccess = discord.PermissionOverwrite(read_messages=False, send_messages=False)
+                newArrival = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+                await client.create_channel(server, 'welcome',  (role, newArrival), (server.me, newArrival), (server.default_role, denyAccess))
                 break
             else:
                 continue
         break
+
 
     ign = await client.wait_for_message(author=member)
     # Ask user to try again if no response is given.
@@ -139,17 +157,8 @@ async def on_member_join(member):
     embed.add_field(name="Guidelines For Senua Black", value=rulesTwo)
     await client.send_message(member, embed=embed)
     
+    redis_server.set('ARRIVAL_COUNT', 0)
 
-    for server in client.servers:
-        for role in server.roles:
-            if role.name == 'New Arrival':
-                denyAccess = discord.PermissionOverwrite(read_messages=False, send_messages=False)
-                newArrival = discord.PermissionOverwrite(read_messages=True, send_messages=True)
-                await client.create_channel(server, 'welcome',  (role, newArrival), (server.me, newArrival), (server.default_role, denyAccess))
-                break
-            else:
-                continue
-        break
 
 @client.event
 async def on_message(message):
@@ -592,7 +601,7 @@ async def on_message(message):
         secretKey = await client.wait_for_message(author = message.author)
         if str(secretKey.content) == redis_server.get('SECRET_KEY').decode('utf-8'):
             await client.send_message(message.channel, "Key Accepted.  Discordis Killed")
-            await client.purge_from(message.channel, limit=5)
+            await client.purge_from(message.channel, limit=3)
             await client.logout()
         else:
             await client.send_message(message.channel, "Wrong Key.   Start Over.")

@@ -19,7 +19,7 @@ tryAgain="Make sure you type the syndicates name exactly how it is in Warframe (
 
 syndicates = ('NEW LOKA', 'CEPHALON SUDA', 'STEEL MERIDIAN', 'RED VEIL', 'ARBITERS OF HEXIS', 'THE PERRIN SEQUENCE')
 
-recruitMessage = "{Senua Black} (Level 9 Shadow) is now recruiting active Warframe players.  We welcome and encourage any and all MR, Play Styles, Frames, Builds, Ideas, Thoughts, etc.  With Fortuna just around the corner this is a great time to join a Clan.  Whisper for an invite or if you just have questions about joining a Clan."
+recruitMessage = "{Senua Black} (Level 9 Shadow) is now recruiting active Warframe players.  We welcome and encourage any and all MR, Play Styles, Frames, Builds, Ideas, etc. Whisper for an invite."
 
 rulesOne = "In order to keep an active and helpful Clan we do have a few guidelines\n\n#1:  After 14 days of inactivity in Warframe you will get a message asking if you wish to remain a member.  If you do not respond or if you have chosen to move on in life then you will be removed from Senua Black.  You are welcome to re-join at any time as long as we have room.\n\n#2:  We are a Clan that allows anyone and everyone.  If someone asks a question in #warframe that seems obvious or trivial to you, please refrain from any negative comments.  If someone is talking about something that you don't understand, interject and ask them to clarify.  Communication is vital for us to move forward together.\n\n"
 
