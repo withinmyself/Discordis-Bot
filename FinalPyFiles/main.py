@@ -2,6 +2,7 @@ import asyncio
 import time
 import redis
 import json
+import random
 
 import discord
 from discord.ext.commands import Bot
@@ -12,7 +13,7 @@ from senua_db import Member, Session, Base, engine
 from strings import botInfo, welcome, ignAdd, \
     addMember, syndicateRole, syndicates, tryAgain, success, \
     recruitMessage, rulesOne, rulesTwo, titles, missionStatement, \
-    welcomeMessage
+    welcomeMessage, contest
 
 
 Client = discord.Client()
@@ -222,7 +223,8 @@ async def on_message(message):
     if message.content.upper() == '$RECRUIT':
         await client.send_message(message.channel, recruitMessage)
         await client.send_message(message.channel, "\n\nDiscord Invite:   https://discord.gg/YZMXwtX")
-
+    else:
+        pass
     # Display Rules
     if message.content.upper() == '$RULES':
         embed = discord.Embed(colour = discord.Colour.red())
@@ -233,6 +235,8 @@ async def on_message(message):
         embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
         embed.add_field(name="Guidelines For Senua Black", value=rulesTwo)
         await client.send_message(message.channel, embed=embed)
+    else:
+        pass
 
     # Display Titles
     if message.content.upper() == '$TITLES':
@@ -240,6 +244,83 @@ async def on_message(message):
         embed.set_thumbnail(url='https://i.imgur.com/priNXCM.jpg')
         embed.add_field(name="Titles", value=titles)
         await client.send_message(message.channel, embed=embed)
+    else:
+        pass
+    
+    # Current Contest Details - Easily changed in our strings.py file
+    if message.content.upper() == '$CONTEST':
+        await client.send_message(message.channel, contest)
+    else:
+        pass
+
+
+    # SPIN2WIN1.0
+    if message.content.upper() == '$INIT_CONTEST':
+        await client.send_message(message.channel, "To initiate all pointers and keys enter Contest Key")
+        contestKey = await client.wait_for_message(author=message.author)
+        if str(contestKey.content) == redis_server.get('CONTEST_KEY').decode('utf-8'):
+            redis_server.set('REWARD_ALL', True)
+            redis_server.set('REWARD_ONE', False)
+            await client.send_message(message.channel, "Contest Initialized")
+        else:
+            await client.send_message(message.channel, "Wrong Contest Key")
+    else:
+        pass
+
+    if message.content.upper() == '$LIFT':
+        await client.send_message(message.channel, "Enter your Contest Key")
+        contestKey = await client.wait_for_message(author=message.author)
+        contestKeyInt = int(contestKey.content)
+        winningKey = int(redis_server.get('WINNING_KEY'))
+        everyonesKey = int(redis_server.get('EVERYONES_KEY'))
+        bothKeys = (winningKey, everyonesKey)
+        if contestKeyInt not in bothKeys:
+            await client.send_message(message.channel, "Key Error!")
+        else:
+            if contestKeyInt == winningKey and redis_server.get('REWARD_ONE') != True:
+                redis_server.set('REWARD_ONE', True)
+                rare = random.randint(40, 49)
+                uncommon = random.randint(25, 39)
+                common = random.randint(1, 24)
+                winner = random.randint(1, 49)
+                await client.send_message(message.channel, "Compiling Results...")
+                time.sleep(2)
+                await client.send_message(message.channel, "...")
+                time.sleep(1)
+                await client.send_message(message.channel, "..")
+                time.sleep(1)
+                await client.send_message(message.channel, ".")
+                time.sleep(1)
+                if winner >= 1 and winner <= 25:
+                    await client.send_message(message.channel, "COMMON Reward!  Not the worst thing in the world!")
+                    time.sleep(2)
+                    await client.send_message(message.author, "Message the word FLIP to @withinmyself  along with your chosen Reward from Common")
+                if winner >= 26 and winner <= 40:
+                    await client.send_message(message.channel, "UNCOMMON Reward!  Not too shabby!")
+                    time.sleep(2)
+                    await client.send_message(message.author, "Message the word RAS to @withinmyself along with your chosen Reward from either Uncommon or Common")
+                if winner >= 41 and winner <= 50:
+                    await client.send_message(message.channel, "RARE Reward!  Congratulations!")
+                    time.sleep(2)
+                    await client.send_message(message.author, "Message the word AND to @withinmyself along with your chosen Reward from either Rare, Uncommon or Common")
+            else:
+                pass
+            #  if contestKeyInt == everyonesKey and redis_server.get('REWARD_ALL') != False:
+                
+    
+    else:
+        pass
+        
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -615,7 +696,7 @@ async def on_message(message):
         secretKey = await client.wait_for_message(author = message.author)
         if str(secretKey.content) == redis_server.get('SECRET_KEY').decode('utf-8'):
             await client.send_message(message.channel, "Key Accepted")
-            await client.purge_from(message.channel, limit=100)      
+            await client.purge_from(message.channel, limit=15)      
         else:
             await client.send_message(message.channel, "Wrong Key. Start Over.")
     else:

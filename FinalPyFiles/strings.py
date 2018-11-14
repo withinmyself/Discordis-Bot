@@ -29,4 +29,6 @@ titles = "Initiate:  Visit Dojo and create Blueprints.  Access #warframe, #fashi
 
 missionStatement = "Our goal is to recruit and retain active Warframe players who will join us in helping anyone and everyone with whatever the endeavor may be while also furthering our own achievments.\n \nSenua Black accepts anyone who wants to join.  We will all move forward together even if our personal goals are quite different.\n\nWe encourage high ranking players to lend assistance when asked.  If you are new to Warframe we want you to feel comfortable asking questions and engaging in conversations.\n \n Thanks so much for joining Senua Black!"
 
+contest = "**We All Lift Mutagen Together - Contribution Contest**\n\nOn **Thursday Night November 15th at Midnight(CST)** I will check all the current Clan Dojo Contributions for Mutagen Samples.  Then on **Sunday Night November 18th at Midnight(CST)** I will check the Mutagen Sample Contributions once again.  Whoever contributes the most Mutagen Samples between *Thursday* Night and *Sunday* Night will win the contest.\n\n__Don't worry!! Plenty more information available!!__\n__For contest details and everything you need in order to participate go to #contest__"
+
 
