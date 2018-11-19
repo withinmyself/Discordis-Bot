@@ -1,1 +1,2 @@
-web: redis-server
+worker:  redis-server.exe
+worker: python main.py
