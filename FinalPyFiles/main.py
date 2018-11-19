@@ -13,7 +13,7 @@ from senua_db import Member, Session, Base, engine
 from strings import botInfo, welcome, ignAdd, \
     addMember, syndicateRole, syndicates, tryAgain, success, \
     recruitMessage, rulesOne, rulesTwo, titles, missionStatement, \
-    welcomeMessage, contest
+    welcomeMessage, contest, rivenList
 
 
 Client = discord.Client()
@@ -254,6 +254,7 @@ async def on_message(message):
         pass
 
 
+
     # SPIN2WIN1.0
     if message.content.upper() == '$INIT_CONTEST':
         await client.send_message(message.channel, "To initiate all pointers and keys enter Contest Key")
@@ -261,6 +262,7 @@ async def on_message(message):
         if str(contestKey.content) == redis_server.get('CONTEST_KEY').decode('utf-8'):
             redis_server.set('REWARD_ALL', True)
             redis_server.set('REWARD_ONE', False)
+            redis_server.set('WINNING_KEY', '10001110101')
             await client.send_message(message.channel, "Contest Initialized")
         else:
             await client.send_message(message.channel, "Wrong Contest Key")
@@ -270,15 +272,19 @@ async def on_message(message):
     if message.content.upper() == '$LIFT':
         await client.send_message(message.channel, "Enter your Contest Key")
         contestKey = await client.wait_for_message(author=message.author)
-        contestKeyInt = int(contestKey.content)
-        winningKey = int(redis_server.get('WINNING_KEY'))
-        everyonesKey = int(redis_server.get('EVERYONES_KEY'))
+        contestKeyInt = str(contestKey.content)
+        winningKey = redis_server.get('WINNING_KEY').decode('utf-8')
+        everyonesKey = redis_server.get('EVERYONES_KEY').decode('utf-8')
         bothKeys = (winningKey, everyonesKey)
         if contestKeyInt not in bothKeys:
-            await client.send_message(message.channel, "Key Error!")
+            await client.send_message(message.channel, "The contest is over and this key has been used.  Check your inbox for details about your chosen Reward.  If you received nothing then contact @withinmyself to rectify the situation.")
         else:
-            if contestKeyInt == winningKey and redis_server.get('REWARD_ONE') != True:
-                redis_server.set('REWARD_ONE', True)
+            if winningKey == '00001111':
+                await client.send_message(message.channel, "The contest is over and this key has been used.  Check your inbox for details about your chosen Reward.  If you received nothing then contact @withinmyself to rectify the situation.")
+            else:
+                pass
+            if contestKeyInt == winningKey:
+                redis_server.set('WINNING_KEY', '00001111')
                 rare = random.randint(40, 49)
                 uncommon = random.randint(25, 39)
                 common = random.randint(1, 24)
@@ -286,23 +292,23 @@ async def on_message(message):
                 await client.send_message(message.channel, "Compiling Results...")
                 time.sleep(2)
                 await client.send_message(message.channel, "...")
-                time.sleep(1)
+                time.sleep(3)
                 await client.send_message(message.channel, "..")
-                time.sleep(1)
+                time.sleep(3)
                 await client.send_message(message.channel, ".")
-                time.sleep(1)
+                time.sleep(4)
                 if winner >= 1 and winner <= 25:
-                    await client.send_message(message.channel, "COMMON Reward!  Not the worst thing in the world!")
+                    await client.send_message(message.channel, "RARE Reward!  You lucky luck luck boy!!")
                     time.sleep(2)
-                    await client.send_message(message.author, "Message the word FLIP to @withinmyself  along with your chosen Reward from Common")
+                    await client.send_message(message.author, "Message the word FLIP to @withinmyself  along with your chosen Reward from either RARE, UNCOMMON or COMMON")
                 if winner >= 26 and winner <= 40:
-                    await client.send_message(message.channel, "UNCOMMON Reward!  Not too shabby!")
+                    await client.send_message(message.channel, "RARE Reward!  WTF Man!!!  You are one lucky SOB!!")
                     time.sleep(2)
-                    await client.send_message(message.author, "Message the word RAS to @withinmyself along with your chosen Reward from either Uncommon or Common")
+                    await client.send_message(message.author, "Message the word RAS to @withinmyself along with your chosen Reward from either RARE,  UCOMMON or COMON")
                 if winner >= 41 and winner <= 50:
-                    await client.send_message(message.channel, "RARE Reward!  Congratulations!")
+                    await client.send_message(message.channel, "RARE Reward!  You...Have GOT...To be kidding me!!!")
                     time.sleep(2)
-                    await client.send_message(message.author, "Message the word AND to @withinmyself along with your chosen Reward from either Rare, Uncommon or Common")
+                    await client.send_message(message.author, "Message the word AND to @withinmyself along with your chosen Reward from either RARE, UNCOMMON or COMMON")
             else:
                 pass
             #  if contestKeyInt == everyonesKey and redis_server.get('REWARD_ALL') != False:
@@ -592,7 +598,7 @@ async def on_message(message):
         if data['isDay'] == True:
             await client.send_message(message.channel, "It Is Currently Day Time On Earth With {} Left Until Night".format(data['timeLeft']))
         if data['isDay'] == False:
-            await client.send_message(channel, "It Is Currently Night Time On Earth With {} Left Until Morning".format(data['timeLeft']))    
+            await client.send_message(message.channel, "It Is Currently Night Time On Earth With {} Left Until Morning".format(data['timeLeft']))    
     
     # Return information on The Void Trader in Warframe.
     baroMsg = str(message.content.upper())

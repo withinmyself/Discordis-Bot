@@ -31,4 +31,6 @@ missionStatement = "Our goal is to recruit and retain active Warframe players wh
 
 contest = "**We All Lift Mutagen Together - Contribution Contest**\n\nOn **Thursday Night November 15th at Midnight(CST)** I will check all the current Clan Dojo Contributions for Mutagen Samples.  Then on **Sunday Night November 18th at Midnight(CST)** I will check the Mutagen Sample Contributions once again.  Whoever contributes the most Mutagen Samples between *Thursday* Night and *Sunday* Night will win the contest.\n\n__Don't worry!! Plenty more information available!!__\n__For contest details and everything you need in order to participate go to #contest__"
 
+rivenList = "[Mire Uti-Loctidus] [Nuker Hexa-Gelicron] [Sonicor Conciata] [Kohm Vexisus] [Dragon Nikana Tore-exiada]"
+
 
