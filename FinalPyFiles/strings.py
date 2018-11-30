@@ -1,13 +1,13 @@
 import discord
 
 
-botInfo="$INFO  Senua Black information\n$RULES  Senua Black Guidelines\n$TITLES  Promotion Information\n$HELP  Discordis Bot Commands\n\n$IGN  Change/Add your In-Game-Name\n$FRAME  Most used Warframe\n$PLANET  Furthest planet you've reached\n$QUEST  Your current Warframe Quest\n$PRIORITY   Top priority in Warframe right now\n\n$ADDSYNDICATE  Add Syndicate Role\n$REMOVESYNDICATE  Remove Syndicate Role\n\n $FIND  Retrieve member information using IGN\n$MYSELF  Retrieve your information\n$ALL  Show all member information\n\n$EARTH  Day/Night status for Earth/Cetus\n$TRADER Baro Ki`Teer Information\n$ENDLESS  Endless Fissure Missions\n$FISSURES  ALL Fissure Missions\n$DARVO Weapons for less!!\n\n$RECRUIT  Current Recruitment Message\n\n"
+botInfo="$INFO  Senua Black information\n$RULES  Senua Black Guidelines\n$TITLES  Promotion Information\n$BOT  Discordis Bot Commands\n\n$IGN  Change/Add your In-Game-Name\n$FRAME  Most used Warframe\n$PLANET  Furthest planet you've reached\n$QUEST  Your current Warframe Quest\n$PRIORITY   Top priority in Warframe right now\n\n$ADDSYNDICATE  Add Syndicate Role\n$REMOVESYNDICATE  Remove Syndicate Role\n\n $FINDIGN  Find IGN using Discord username\n$MYSELF  Retrieve your information\n$ALL  Show all member information\n\n$EARTH  Day/Night status for Earth/Cetus\n$TRADER Baro Ki`Teer Information\n$ENDLESS  Endless Fissure Missions\n$FISSURES  ALL Fissure Missions\n$DARVO Weapons for less!!\n\n$RECRUIT  Current Recruitment Message\n\n"
 
-welcome= "Welcome to Senua Black {0:{1}}!!  If you're seeing this, you should have already received an invitation in Warframe to join our Clan.   Now that you're here, we need to know who you are.  Please type your In-Game-Name exactly as it appears in Warframe then hit enter"
+welcome= "Welcome to Senua Black {0:{1}}!!  If you're coming from Reddit and have not yet received an in-game invite, please type your in-game-name followed by _INVITE\n\nMy in-game-name is withinmyself so I would type withinmyself_INVITE then hit [ENTER]\n\nIf you have already received an invitation and have already joined our Warframe Clan just type your in-game-name which would be withinmyself instead of withinmyself_INVITE\n\nThanks!!!"
 
 ignAdd="Before you can access our main text and voice channels or have access to our Dojo, you'll need to provide your IGN.  Please type in your IGN and hit enter inside the #welcome channel."
 
-welcomeMessage="If you're just joining us go to the welcome channel with your username attached to it and enter your IGN.\n\nAfter we know who you are in Warframe you'll be able to join most of our text and voice channels\n\n#warframe: Main Text Channel\n#fashionframe: Screenshots of our gorgeous frames\n#information: Senua Black Information\n\n"
+welcomeMessage="Welcome to the Senua Black Discord Server.  Please click over to the welcome channel with your username attached to it."
 
 addMember="Discordis needs to add you to The Database.  Please type your In-Game-Name and hit enter."
 
@@ -19,7 +19,7 @@ tryAgain="Make sure you type the syndicates name exactly how it is in Warframe (
 
 syndicates = ('NEW LOKA', 'CEPHALON SUDA', 'STEEL MERIDIAN', 'RED VEIL', 'ARBITERS OF HEXIS', 'THE PERRIN SEQUENCE')
 
-recruitMessage = "{Senua Black} (Level 9 Shadow) is now recruiting active Warframe players.  We welcome and encourage any and all MR, Play Styles, Frames, Builds, Ideas, etc. Whisper for an invite."
+recruitMessage = "{Senua Black} (Level 9 Storm Clan) is now recruiting active Warframe players.  We welcome and encourage any and all MR, Play Styles, Frames, Builds, Ideas, etc. Message for invite."
 
 rulesOne = "In order to keep an active and helpful Clan we do have a few guidelines\n\n#1:  After 14 days of inactivity in Warframe you will get a message asking if you wish to remain a member.  If you do not respond or if you have chosen to move on in life then you will be removed from Senua Black.  You are welcome to re-join at any time as long as we have room.\n\n#2:  We are a Clan that allows anyone and everyone.  If someone asks a question in #warframe that seems obvious or trivial to you, please refrain from any negative comments.  If someone is talking about something that you don't understand, interject and ask them to clarify.  Communication is vital for us to move forward together.\n\n"
 
