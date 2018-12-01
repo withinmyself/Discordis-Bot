@@ -101,7 +101,7 @@ venv.bak/
 /site
 
 # Redis Server
-/redis
+/FinalPyFiles/redis
 .exe
 .rdb
 .conf
