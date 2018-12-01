@@ -19,7 +19,7 @@ from strings import botInfo, welcome, ignAdd, \
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "!")
-redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
+redis_server = redis.StrictRedis(host='localhost', port=6379, db=0, password=os.environ.get('REDISAUTH'))
 
 
 # Verify functionality  
