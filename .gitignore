@@ -100,5 +100,12 @@ venv.bak/
 # mkdocs documentation
 /site
 
+# Redis Server
+/FinalPyFiles/redis
+.exe
+.rdb
+.conf
+.dll
+
 # mypy
 .mypy_cache/
