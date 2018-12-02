@@ -697,7 +697,6 @@ async def on_message(message):
             await client.send_message(message.channel, "Key Accepted.  Discordis Killed")
             await client.purge_from(message.channel, limit=3)
             await client.logout()
-            os.system('redis-cli shutdown')
         else:
             await client.send_message(message.channel, "Wrong Key.   Start Over.")
     else:
