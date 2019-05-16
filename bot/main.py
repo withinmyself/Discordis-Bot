@@ -1074,7 +1074,7 @@ async def on_message(message):
         await client.send_message(message.channel, "Admin Kill Command")
         await client.send_message(message.channel, "Type Secret Key")
         secretKey = await client.wait_for_message(author = message.author)
-        if str(secretKey.content) == 'wastedPenguin27.':
+        if str(secretKey.content) == redis_server.get('SECRET_KEY').decode('utf-8'):
             await client.send_message(message.channel, "Key Accepted.  Discordis Killed")
             await client.purge_from(message.channel, limit=3)
             await client.logout()
