@@ -489,17 +489,12 @@ async def on_message(message):
 
 
     if message.content.upper() == '$MOTD':
+	# Make sure we are in the right channel
         if message.channel.name == 'admin':
+	    # Start database session then find clan in database
             session = Session()
-        #    await client.send_message(message.channel, 'Type Clan name then hit [ENTER]')
-        #    clanName = await client.wait_for_message(author=message.author)
             clan = session.query(Clan).filter_by(clan_name='Senua Black').first()
-        #    if clan == None:
-        #        clan = Clan(clan_name=str(clanName.content), clan_tier='Not Set', clan_level='Not_Set', clan_research='Not Set', clan_resources='Not Set', clan_priority='Not Set', clan_events='Not Set')
-        #        session.add(clan)
-        #        session.commit()
-        #    else:
-        #        pass
+	    # Post to current channel this embed and the options
             embed = discord.Embed(colour = discord.Colour.red())
             embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
             embed.add_field(name='Clan Name:', value=clan.clan_name)
@@ -562,6 +557,7 @@ async def on_message(message):
                 await client.send_message(message.channel, 'Nostalgia is the enemy of discovery')
             else:
                 pass
+	# If not in right channel fall to this
         else:
             await client.send_message(message.channel, 'This feature cannot be used in this channel.  If you do not know which channel to use this in then you are not supposed to be using it.')
     else:
