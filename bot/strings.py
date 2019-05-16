@@ -1,9 +1,7 @@
-import discord
 
+botInfo="$INFO  Senua Black information\n$RULES  Senua Black Guidelines\n$BOT  Discordis Bot Commands\n\n$IGN  Change/Add your In-Game-Name\n$FRAME  Most used Warframe\n$PLANET  Furthest planet you've reached\n$QUEST  Your current Warframe Quest\n$PRIORITY   Top priority in Warframe right now\n\n$ADDSYNDICATE  Add Syndicate Role\n$REMOVESYNDICATE  Remove Syndicate Role\n$ARBITRATION  Add Arbitration role\n\n $FINDIGN  Find IGN using Discord username\n$MYSELF  Retrieve your information\n$ALL  Show all member information\n\n$EARTH  Day/Night status for Earth/Cetus\n$FORTUNA Warm/Cold Cycle\n$TRADER Baro Ki`Teer Information\n$ENDLESS  Endless Fissure Missions\n$FISSURES  ALL Fissure Missions\n$DARVO Weapons for less!!\n\n$RECRUIT  Current Recruitment Message\n\n"
 
-botInfo="$INFO  Senua Black information\n$RULES  Senua Black Guidelines\n$TITLES  Promotion Information\n$BOT  Discordis Bot Commands\n\n$IGN  Change/Add your In-Game-Name\n$FRAME  Most used Warframe\n$PLANET  Furthest planet you've reached\n$QUEST  Your current Warframe Quest\n$PRIORITY   Top priority in Warframe right now\n\n$ADDSYNDICATE  Add Syndicate Role\n$REMOVESYNDICATE  Remove Syndicate Role\n\n $FINDIGN  Find IGN using Discord username\n$MYSELF  Retrieve your information\n$ALL  Show all member information\n\n$EARTH  Day/Night status for Earth/Cetus\n$TRADER Baro Ki`Teer Information\n$ENDLESS  Endless Fissure Missions\n$FISSURES  ALL Fissure Missions\n$DARVO Weapons for less!!\n\n$RECRUIT  Current Recruitment Message\n\n"
-
-welcome= "Welcome to Senua Black {0:{1}}!!  If you're coming from Reddit and have not yet received an in-game invite, please type your in-game-name followed by _INVITE\n\nMy in-game-name is withinmyself so I would type withinmyself_INVITE then hit [ENTER]\n\nIf you have already received an invitation and have already joined our Warframe Clan just type your in-game-name which would be withinmyself instead of withinmyself_INVITE\n\nThanks!!!"
+welcome= "Welcome to Senua Black {0:{1}}!!  **Please type in your in-game-name and hit [ENTER]**\n\n**Thanks!!!**"
 
 ignAdd="Before you can access our main text and voice channels or have access to our Dojo, you'll need to provide your IGN.  Please type in your IGN and hit enter inside the #welcome channel."
 
@@ -19,7 +17,7 @@ tryAgain="Make sure you type the syndicates name exactly how it is in Warframe (
 
 syndicates = ('NEW LOKA', 'CEPHALON SUDA', 'STEEL MERIDIAN', 'RED VEIL', 'ARBITERS OF HEXIS', 'THE PERRIN SEQUENCE')
 
-recruitMessage = "{Senua Black} (Level 9 Storm Clan) is now recruiting active Warframe players.  We welcome and encourage any and all MR, Play Styles, Frames, Builds, Ideas, etc. Message for invite."
+recruitMessage = "Senua Black is a Rank 10 Storm Clan that is actively recruiting Tenno from all walks of life and from every corner of the world.  We welcome and encourage any and all Mastery Ranks, Play Styles, Frames, Builds, Ideas, Theories, Criticisms and Memes.\n\nOur goal is to recruit and retain active Warframe players who will join us in helping anyone and everyone with whatever the endeavor may be while also furthering our own achievments.\n\nCome visit us at Senua Black Discord where you can ask us any questions you may have or you can just squad up with some passionate Tenno and go play some Warframe. https://discord.gg/xdem8tR"
 
 rulesOne = "In order to keep an active and helpful Clan we do have a few guidelines\n\n#1:  After 14 days of inactivity in Warframe you will get a message asking if you wish to remain a member.  If you do not respond or if you have chosen to move on in life then you will be removed from Senua Black.  You are welcome to re-join at any time as long as we have room.\n\n#2:  We are a Clan that allows anyone and everyone.  If someone asks a question in #warframe that seems obvious or trivial to you, please refrain from any negative comments.  If someone is talking about something that you don't understand, interject and ask them to clarify.  Communication is vital for us to move forward together.\n\n"
 
@@ -33,4 +31,6 @@ contest = "**We All Lift Mutagen Together - Contribution Contest**\n\nOn **Thurs
 
 rivenList = "[Mire Uti-Loctidus] [Nuker Hexa-Gelicron] [Sonicor Conciata] [Kohm Vexisus] [Dragon Nikana Tore-exiada]"
 
+policies = "Senua Black maintains an open recruitment policy.  This means we allow anyone and everyone to join.  This makes for a very diverse group of players who might not normally play together.\n\nWe think this is one of the things that makes Senua Black great but this can lead to tension between varying age groups, nationalities and cultures.  We can't always moderate every voice and text channel so it is up to each of our members to maintain a certain degree of maturity and respect towards everyone else in Senua Black.\n\n"
 
+policies2 = "We want to give everyone the benefit of the doubt which is why if any incidents occur you will be contacted directly to be made aware of the situation.  If we need to speak with you more than twice you may be removed from Senua Black both in Warframe and in Discord.\n\nWe really hope it never comes to this but with the amount of growth we are experiencing we need to make sure everyone is on the same page so that everyone can enjoy the experience of playing Warframe with a Clan.\n\nIf anyone has any questions or conerns please contact any of the Warlords or Generals.  Thanks!!"
