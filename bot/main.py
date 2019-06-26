@@ -101,7 +101,7 @@ async def on_message(message):
 # $CLEAR - Clears Lines Of Messages (Requires Secret Key)
     def redis_motd():
         redis_server.set('MOTD', True)
-    schedule.every().day.at("19:30").do(redis_motd)
+    schedule.every().day.at("00:30").do(redis_motd)
     schedule.run_pending()
     time.sleep(1)
 
@@ -121,7 +121,29 @@ async def on_message(message):
         await client.send_message(message.author, 'Updated Senua Black Policies - 02/25/2019\n\n{0}\n{1}'.format(policies, policies2))
     else:
         pass
-
+    if message.content.upper() == '!!TEST!!':
+        for server in client.servers:
+            for member in server.members:
+                if str(member.name) == 'Buckethead':
+                    roles = []
+                    x = 0
+                    for role in member.roles:
+                        if role.name != '@everyone':
+                            roles.append(role.name)
+                            await client.remove_roles(member, role)
+                    await client.send_message(message.channel, str(roles))
+                       # await client.send_message(message.channel, '{0} Roles Removed'.format(str(member.name)))
+                    #for role in member.roles:
+                     #   if x < len(roles):
+                      #      if role.name == roles[x]:
+                       #         client.add_roles(member, role)
+                        #    x += 1
+                       # x = 0
+                  #  await client.send_message(message.channel, '{0} Roles Added: {1}'.format(str(member.name), role))
+                else:
+                    continue
+    else:
+        pass
     if message.content.upper() == '$REGISTER':
         await client.send_message(message.author, 'Which are you?\n\n1. Leader 2. Initiate\n\nType 1 or 2 and hit [ENTER]')
         which = await client.wait_for_message(author=message.author)
@@ -231,8 +253,9 @@ async def on_message(message):
                     clan = session.query(Clan).filter_by(clan_name='Senua Black').first()
                     embed = discord.Embed(colour = discord.Colour.red())
                     embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-                    embed.add_field(name='Senua Black MOTD', value=clan.clan_priority)
-                    embed.add_field(name='Current Research', value='We are currently researching {0}'.format(clan.clan_research), inline=False)
+                    embed.add_field(name='Current Events', value='Senua Black is actively engaged in {0}'.format(str(clan.clan_events)))
+                    embed.add_field(name='Research', value='We are currently researching {0}'.format(str(clan.clan_research)), inline=False)
+                    embed.add_field(name='Senua Black MOTD', value=str(clan.clan_priority), inline=False)
                     await client.send_message(channel, embed=embed)
     else:
         pass
@@ -536,8 +559,9 @@ async def on_message(message):
 
                 embed = discord.Embed(colour = discord.Colour.red())
                 embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-                embed.add_field(name='Senua Black MOTD', value=str(motd.content))
+                embed.add_field(name='Current Events', value='Senua Black is actively engaged in {0}'.format(str(clan.clan_events)))
                 embed.add_field(name='Research', value='We are currently researching {0}'.format(str(clan.clan_research)), inline=False)
+                embed.add_field(name='Senua Black MOTD', value=str(motd.content), inline=False)
                 await client.send_message(message.channel, embed=embed)
 
                 await client.send_message(message.channel, '\n\nThis is what the MOTD will look like when it is displayed in #main.\n\nCommit changes?  Type Y or N then hit [ENTER]')
@@ -553,8 +577,9 @@ async def on_message(message):
             if str(change.content) == '5':
                 embed = discord.Embed(colour = discord.Colour.red())
                 embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-                embed.add_field(name='Senua Black MOTD', value=clan.clan_priority)
-                embed.add_field(name='Current Research', value='We are currently researching {0}'.format(clan.clan_research), inline=False)
+                embed.add_field(name='Current Events', value='Senua Black is actively engaged in {0}'.format(str(clan.clan_events)))
+                embed.add_field(name='Research', value='We are currently researching {0}'.format(str(clan.clan_research)), inline=False)
+                embed.add_field(name='Senua Black MOTD', value=str(clan.clan_priority), inline=False)
                 await client.send_message(message.channel, embed=embed)
                 await client.send_message(message.channel, '\n\nThis will appear in #main when the first message is posted after 08:30PM CST every day.  You can also use $BLASTMOTD to send the MOTD to #main right now.  It will still be scheduled to post after 08:30PM CST as well.')
 
@@ -728,6 +753,14 @@ async def on_message(message):
     else:
         pass
 
+    star_wars = ['TRAGEDY', 'DARTH', 'PLAGUEIS', 'WISE', '$PLAGUEIS']
+    # for word in star_wars:
+      #  if word in message.content.upper():
+       #     await client.send_message(message.channel, 'Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It’s not a story the Jedi would tell you. It’s a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life… He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful… the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He could save others from death, but not himself.')
+        #    break
+        #else:
+         #   continue
+        # break
     arby_variations = ['$ARBITRATION', '$ARBYS', '$ARBY', '$ARBITRATIONS']
     if message.content.upper() in arby_variations:
         if message.channel.name == 'main':
@@ -1078,7 +1111,7 @@ async def on_message(message):
         await client.send_message(message.channel, "Admin Kill Command")
         await client.send_message(message.channel, "Type Secret Key")
         secretKey = await client.wait_for_message(author = message.author)
-        if str(secretKey.content) == 'wastedPenguin27.':
+        if str(secretKey.content) == 'comfortingMoons97#':
             await client.send_message(message.channel, "Key Accepted.  Discordis Killed")
             await client.purge_from(message.channel, limit=3)
             await client.logout()
