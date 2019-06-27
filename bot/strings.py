@@ -1,11 +1,9 @@
 
 botInfo="$INFO  Senua Black information\n$RULES  Senua Black Guidelines\n$BOT  Discordis Bot Commands\n\n$IGN  Change/Add your In-Game-Name\n$FRAME  Most used Warframe\n$PLANET  Furthest planet you've reached\n$QUEST  Your current Warframe Quest\n$PRIORITY   Top priority in Warframe right now\n\n$ADDSYNDICATE  Add Syndicate Role\n$REMOVESYNDICATE  Remove Syndicate Role\n$ARBITRATION  Add Arbitration role\n\n $FINDIGN  Find IGN using Discord username\n$MYSELF  Retrieve your information\n$ALL  Show all member information\n\n$EARTH  Day/Night status for Earth/Cetus\n$FORTUNA Warm/Cold Cycle\n$TRADER Baro Ki`Teer Information\n$ENDLESS  Endless Fissure Missions\n$FISSURES  ALL Fissure Missions\n$DARVO Weapons for less!!\n\n$RECRUIT  Current Recruitment Message\n\n"
 
-welcome= "Welcome to Senua Black {0:{1}}!!  **Please type in your in-game-name and hit [ENTER]**\n\n**Thanks!!!**"
-
 ignAdd="Before you can access our main text and voice channels or have access to our Dojo, you'll need to provide your IGN.  Please type in your IGN and hit enter inside the #welcome channel."
 
-welcomeMessage="Welcome to the Senua Black Discord Server.  Please click over to the welcome channel with your username attached to it."
+welcome="Welcome to the Senua Black Gaming Discord Server."
 
 addMember="Discordis needs to add you to The Database.  Please type your In-Game-Name and hit enter."
 
