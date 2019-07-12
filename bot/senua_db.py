@@ -9,16 +9,16 @@ engine = create_engine('postgresql://postgres:wastedPenguin27.@localhost:5432/di
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
-class Member(Base):
-        __tablename__ = 'members'
+class User(Base):
+        __tablename__ = 'users'
 
-        id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+        id = Column(Integer, Sequence('users_id_seq'), primary_key=True)
         user = Column(String)
         ign = Column(String)
         game = Column(String)
 
         def __repr__(self):
-            return '<Member #{4}(User={0}, IGN={1}, Game={2})>'.format(self.user, self.ign, self.game)
+            return '<User: {0}, IGN:{1}, Game:{2})>'.format(self.user, self.ign, self.game)
 
 class Clan(Base):
         __tablename__ = 'clans'

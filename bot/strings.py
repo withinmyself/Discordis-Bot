@@ -1,34 +1,47 @@
+welcome='Welcome to Senua Black\'s Gaming Server.  If you\'d like to join our Warframe Clan send one of the Founders or Moderators a message.\n\nIf you\'re here for other games besides Warframe that\'s cool too.\n\nEither way, if you plan on sticking around, type !register to change your visitor role to a member role which will let you see the rest of our channels.  You can also go to #roles and click next to any of our registered games to add it as a mentionable role in Discord.'
 
-botInfo="$INFO  Senua Black information\n$RULES  Senua Black Guidelines\n$BOT  Discordis Bot Commands\n\n$IGN  Change/Add your In-Game-Name\n$FRAME  Most used Warframe\n$PLANET  Furthest planet you've reached\n$QUEST  Your current Warframe Quest\n$PRIORITY   Top priority in Warframe right now\n\n$ADDSYNDICATE  Add Syndicate Role\n$REMOVESYNDICATE  Remove Syndicate Role\n$ARBITRATION  Add Arbitration role\n\n $FINDIGN  Find IGN using Discord username\n$MYSELF  Retrieve your information\n$ALL  Show all member information\n\n$EARTH  Day/Night status for Earth/Cetus\n$FORTUNA Warm/Cold Cycle\n$TRADER Baro Ki`Teer Information\n$ENDLESS  Endless Fissure Missions\n$FISSURES  ALL Fissure Missions\n$DARVO Weapons for less!!\n\n$RECRUIT  Current Recruitment Message\n\n"
+bot_help ='\n\
+    🈺  Senua Black Gaming Bot Commands  🈺\n\n\
+  🔸  !profile         Manage your profile or search for other members.\n\
+  🔸  !register         Gain access to all channels and add your own roles.\n\
+  🔸  !warframe            Real-time access to in-game Warframe data.\n\
+  🔸  !help                All of our bot commands.\n'
 
-ignAdd="Before you can access our main text and voice channels or have access to our Dojo, you'll need to provide your IGN.  Please type in your IGN and hit enter inside the #welcome channel."
+profile_help ='\n\
+     🈺  The following commands are available for !profile  🈺\n\n\
+  🔸  !profile                                                Your personal profile\n\
+  🔸  !profile ign in-game-name               Save your most used IGN.\n\
+  🔸  !profile game fav-game                    Save your favorite game.\n\
+  🔸  !profile user username                     Searches for user profiles.\n\
+  🔸  !profile all                                           Show all profiles.\n\
+  🔸  !profile help                                       Available commands for !profile.\n'
 
-welcome="Welcome to the Senua Black Gaming Discord Server."
+role_help = 'Discordis can add games as discord roles so we can find other gamers.  \
+             We can also keep track of which games are being played the most \
+             and which games are not being played at all.  This will allow us to \
+             provide a better experience for all of Senua Black\'s gamers.\n\n'
 
-addMember="Discordis needs to add you to The Database.  Please type your In-Game-Name and hit enter."
+role_guide = 'To add a role, click on the emoji under the game you want to add.  \
+              The game role will be added immediately to your profile.\n\n  \
+              You\'ll notice that the counter next to the the emoji has increased by one. \
+              This number represents the total amount of members who have added this \
+              role.\n\n'
 
-success="Discordis found success in this endeavor."
+role_remove = 'To remove a role, just click on the game emoji that you want to remove.  \
+               The role will will be removed immediately and the total number of members associated with this game will decrease by one.\n\n'
 
-syndicateRole="Type in the name of a Syndicate you would like to add and hit enter.  Make sure you type it in exactly as it appears in the game: New Loka, Cephalon Suda, Steel Meridian, Red Veil, Arbiters Of Hexis, The Perrin Sequence"
+current_games = ['Destiny2', 'Borderlands2', 'PathofExile', 'Warframe', 'Darksiders3', \
+                 'R6-Siege', 'Pokemon', 'AC-Odyssey', 'LeagueofLegends', 'Titanfall2', \
+                 'Divinity-OS2', 'SpaceEngine', 'Space-Engineers', 'NoMansSky', \
+                 'Insurgency', 'VR']
 
-tryAgain="Make sure you type the syndicates name exactly how it is in Warframe (Use the given reference list).  Type $SYNDICATE and try again."
+full_game_names = ['Destiny 2', 'Borderlands 2', 'Path Of Exile', 'Warframe', 'Darksiders 3', \
+                   'Tom Clancy\'s Rainbow Six Siege', 'Pokemon', 'Assassin\'s Creed Odyssey', \
+                   'League Of Legends', 'Titanfall 2', 'Divinity: Original Sin 2', 'Space Engine', \
+                   'Space-Engineers', 'No Man\'s Sky', 'Insurgency: Sandstorm', 'VR']
 
-syndicates = ('NEW LOKA', 'CEPHALON SUDA', 'STEEL MERIDIAN', 'RED VEIL', 'ARBITERS OF HEXIS', 'THE PERRIN SEQUENCE')
 
-recruitMessage = "Senua Black is a Rank 10 Storm Clan that is actively recruiting Tenno from all walks of life and from every corner of the world.  We welcome and encourage any and all Mastery Ranks, Play Styles, Frames, Builds, Ideas, Theories, Criticisms and Memes.\n\nOur goal is to recruit and retain active Warframe players who will join us in helping anyone and everyone with whatever the endeavor may be while also furthering our own achievments.\n\nCome visit us at Senua Black Discord where you can ask us any questions you may have or you can just squad up with some passionate Tenno and go play some Warframe. https://discord.gg/xdem8tR"
 
-rulesOne = "In order to keep an active and helpful Clan we do have a few guidelines\n\n#1:  After 14 days of inactivity in Warframe you will get a message asking if you wish to remain a member.  If you do not respond or if you have chosen to move on in life then you will be removed from Senua Black.  You are welcome to re-join at any time as long as we have room.\n\n#2:  We are a Clan that allows anyone and everyone.  If someone asks a question in #warframe that seems obvious or trivial to you, please refrain from any negative comments.  If someone is talking about something that you don't understand, interject and ask them to clarify.  Communication is vital for us to move forward together.\n\n"
-
-rulesTwo = "#3:  Discordis can save information regarding your current status in Warframe.  This will let all of us know where we are in Warframe and what we are currently trying to achieve.  This makes for easier Squad creation by allowing you to find others who are doing similar things.  Use $HELP to display Discordis Bot Commands.\n\n#4:  New Members will be Initiates for 3 days.  You will then be promoted to Soldier.  After 1 Month if you have reached MR10 you will be considered for promotion(not guaranteed).  Once you reach MR14 you can request to become a General.  Warlords will be chosen."
-
-titles = "Initiate:  Visit Dojo and create Blueprints.  Access #warframe, #fashionframe, #news, #information, #updates.\n\nSoldier:  Invite players to Clan.  Add decorations in Dojo.  Contibute resources.\n\nOfficer:  Access #senuafuture.  Add text/voice channels.  Kick members from chat channels in Discord and in Warframe.\n\nGeneral:  Kick/ban member from Discord and Clan.  Promote current members.  Access #leaders.\n\nWarlord:  Everything except delete Clan, delete Discord Server, demote Founding Warlord."
-
-missionStatement = "Our goal is to recruit and retain active Warframe players who will join us in helping anyone and everyone with whatever the endeavor may be while also furthering our own achievments.\n \nSenua Black accepts anyone who wants to join.  We will all move forward together even if our personal goals are quite different.\n\nWe encourage high ranking players to lend assistance when asked.  If you are new to Warframe we want you to feel comfortable asking questions and engaging in conversations.\n \n Thanks so much for joining Senua Black!"
-
-contest = "**We All Lift Mutagen Together - Contribution Contest**\n\nOn **Thursday Night November 15th at Midnight(CST)** I will check all the current Clan Dojo Contributions for Mutagen Samples.  Then on **Sunday Night November 18th at Midnight(CST)** I will check the Mutagen Sample Contributions once again.  Whoever contributes the most Mutagen Samples between *Thursday* Night and *Sunday* Night will win the contest.\n\n__Don't worry!! Plenty more information available!!__\n__For contest details and everything you need in order to participate go to #contest__"
-
-rivenList = "[Mire Uti-Loctidus] [Nuker Hexa-Gelicron] [Sonicor Conciata] [Kohm Vexisus] [Dragon Nikana Tore-exiada]"
-
-policies = "Senua Black maintains an open recruitment policy.  This means we allow anyone and everyone to join.  This makes for a very diverse group of players who might not normally play together.\n\nWe think this is one of the things that makes Senua Black great but this can lead to tension between varying age groups, nationalities and cultures.  We can't always moderate every voice and text channel so it is up to each of our members to maintain a certain degree of maturity and respect towards everyone else in Senua Black.\n\n"
-
-policies2 = "We want to give everyone the benefit of the doubt which is why if any incidents occur you will be contacted directly to be made aware of the situation.  If we need to speak with you more than twice you may be removed from Senua Black both in Warframe and in Discord.\n\nWe really hope it never comes to this but with the amount of growth we are experiencing we need to make sure everyone is on the same page so that everyone can enjoy the experience of playing Warframe with a Clan.\n\nIf anyone has any questions or conerns please contact any of the Warlords or Generals.  Thanks!!"
+role_ids = [596864552348680212, 596912356521672706, 596912644762632192, 597999997761355824, \
+            598000071526580246, 598000141739229186, 598000207933866000, 598000259075145730, \
+            598000323419832320, 598000387966107672, 598000453870944276, 598000525996326923]
