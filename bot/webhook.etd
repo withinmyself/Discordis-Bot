@@ -8,17 +8,11 @@ from requests.exceptions import ChunkedEncodingError
 from time import sleep
 import traceback
 
-api = twitter.Api(consumer_key=['yKNjPaKlb4RNne7FhESzJJyKk'],
-                  consumer_secret=['edWYUdPs8CIr6x1qB3KSh8dMZCc2UCet1oeo0fUaYZhN8ccZKK'],
-                  access_token_key=['22284610-PpCin7qMXJ4Y5HpNQWMmPFr6L1Hqen0z1PtsynUvH'],
-                  access_token_secret=['NmEP8X6q3yc4aVMIP6i7Ce2nmeqCPpJzXh7AuLyNdtNRO'])
 
 #logging.basicConfig(level=logging.INFO, format='[%(asctime)s] - [%(levelname)s]:: %(message)s')
 #logging.info('Starting the bot...')
 
-senua_webhook = Webhook('https://discordapp.com/api/webhooks/595561270657155092/fMShY_SYf8VUWtm3x3YBZ2BReYsmuLuOxz9ZzuVZ41EMS-hnIbkpuCFg5o-X0nMfGjYH')
 
-warframe_alerts_account_id = '1344755923'
 #for hook in [senua_webhook]:
  #   requests.post(hook, data={'content': 'Starting Alertz :robot:'})
 while True:

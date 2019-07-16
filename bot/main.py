@@ -447,7 +447,7 @@ def motd_embed():
 	embed = discord.Embed(colour = discord.Colour.red())
 	embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
 	embed.add_field(name='Senua Black MOTD', value=clan.clan_priority)
-	embed.add_field(name='Current Research', value='We are currently researching {0}'.format(clan.clan_research), inline=False)
+	embed.add_field(name='Current Research', value='We are currently researching Leaf Red Pigments which can be obtained by finding, fighting and defeating Stalker.  This is something that is best done with a full Clan squad that is well prepared.', inline=False)
 	return embed
 
 def no_bots(channelName):
