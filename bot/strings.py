@@ -1,5 +1,9 @@
 welcome='Welcome to Senua Black\'s Gaming Server.  If you\'d like to join our Warframe Clan send one of the Founders or Moderators a message.\n\nIf you\'re here for other games besides Warframe that\'s cool too.\n\nEither way, if you plan on sticking around, type !register to change your visitor role to a member role which will let you see the rest of our channels.  You can also go to #roles and click next to any of our registered games to add it as a mentionable role in Discord.'
 
+
+darth = 'Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It’s not a story the Jedi would tell you. It’s a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life… He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful… the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He could save others from death, but not himself.'
+
+
 bot_help ='\n\
     🈺  Senua Black Gaming Bot Commands  🈺\n\n\
   🔸  !profile         Manage your profile or search for other members.\n\

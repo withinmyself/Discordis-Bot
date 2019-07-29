@@ -1,144 +1,162 @@
 import asyncio
 import datetime
-import redis
+#import redis
 import json
 import discord
 from discord.utils import get
 from discord.ext import commands
 from urllib.request import Request, urlopen
 
-from senua_db import User, Session, Base, Clan, engine
+from cogs.test import Test
+from admin.admin import redis_server, client
+from admin.senua_db import User, Session, Base, Clan, engine
 from strings import welcome, bot_help, profile_help, role_help, \
-                    role_guide, role_remove, current_games, full_game_names
+                    role_guide, role_remove, current_games, full_game_names, darth
 
-client = commands.Bot(command_prefix = "!")
-redis_server = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
-
-@client.event
-async def on_ready():
-    print("Discordis Bot Ready")
-    redis_server.set('ARRIVAL_COUNT', 0)  # Track users who are currently joining  
-    redis_server.set('MOTD_TIMER', 0) # For displaying MOTD a certain amount of times
-
-@client.command(pass_context=True)
-async def hello(ctx, arg=None):
-    channel = client.get_channel(519669330107957258)
-    await channel.send('{0}'.format(arg))
-
-@client.command(pass_context=True)
-async def train(ctx, arg1=None, arg2=None):
-    channel = client.get_channel(518579671613308949)
-    if ctx.message.channel.name == channel.name:
-        await channel.send('Whenever {0} is mentioned by anyone in any context, Discordis will reply with {1}'.format(arg1, arg2))
-        if arg1 is not None:
-            redis_server.set('COMMAND', str(arg1))
-        if arg2 is not None:
-            redis_server.set('ACTION', str(arg2))
-    else:
-        ctx.send('This command can only be used in the admin channel.')
+#client = commands.Bot(command_prefix = "!")
+#redis_server = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
 
 
-@client.command(pass_context=True)
-async def hour_test(ctx):
-    hour_is = datetime.datetime.now().strftime('%H')
-    await ctx.send(hour_is)
-    hour = (int(hour_is) + 7) - 12
-    if hour < 0:
-        hour = 24 + int(hour)
-    minute = datetime.datetime.now().strftime('%M')
-    day_int = datetime.datetime.now().strftime('%w')
-    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    day = days[int(day_int)]
-    if day == -1:
-        day = 'Saturday'
-    time = '{0}:{1}'.format(hour, minute)
-    await ctx.send('The time is {0} and the day is {1}'.format(time, day))
+class Welcome(commands.Cog):
+   def __init__ (self, bot):
+       self.bot = bot
+       self._last_member = None
 
-@client.event
-async def on_member_join(member):
-    server = member.guild
-    role = discord.utils.get(server.roles, name='visitor')
-    await member.add_roles(role)
-    embed = discord.Embed(colour = discord.Colour.red())
-    embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
-    embed.add_field(name='Thanks For Visiting!!', value=welcome)
-    await member.send(embed=embed)
-    founders = discord.utils.get(server.roles, name='founders')
-    moderators = discord.utils.get(server.roles, name='moderators')
-    hour_is = datetime.datetime.now().strftime('%H')
-    hour = (int(hour_is) + 7) - 12
-    if hour < 0:
-        hour = 24 + int(hour)
-    minute = datetime.datetime.now().strftime('%M')
-    day_int = datetime.datetime.now().strftime('%w')
-    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    day = days[int(day_int)]
-    time = '{0}:{1}'.format(hour, minute)
-    try:
-        for founder in founders.members:
-            await founder.send('We have a visitor.  {0:{1}} arrived at {2} on {3}.  Please check and see if they need any assistance.  If they want to be a part of our Gaming Server all they need to do is type !register and hit [ENTER].  They can do this in any channel.'.format(member.name, len(member.name)-4, time, day))
-    except AttributeError:
-        pass
-    
-    try:
+   @commands.Cog.listener()
+   async def on_ready(self):
+       print("Discordis Bot Ready")
+
+   @commands.Cog.listener()
+   async def on_member_join(self, member):
+       server = member.guild
+       role = discord.utils.get(server.roles, name='visitor')
+       await member.add_roles(role)
+
+       checked_in = []
+       server = member.guild
+       for role in server.roles:
+           if role.name == 'founders' or role.name == 'moderators':
+               for leader in role.members:
+                   if redis_server.get(leader.name) == b'True':
+                       checked_in.append(leader.name)
+       if len(checked_in) == 0:
+           redis_server.set('CHECK', False)
+           embed = discord.Embed(colour = discord.Colour.red())
+           embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+           embed.add_field(name='Thanks For Visiting!!', value='Welcome to Senua Black!!  None of our leaders are currently available for immediate assistance.  You can send a private message to withinmyself, PJtheBatman, gahro_nahvah or Sadism to hopefully grab our attention.  For now feel free to say hello in our main chat channel.  We try not to make any of our members wait too long in these situations.  Once we are able to get a Clan invite sent you will be able to change your status from visitor to member in Discord which will give you full access to the rest of our channels.')
+           await member.send(embed=embed)
+       else:
+           redis_server.set('CHECK', True)
+           list_to_string = ''
+           for word in checked_in:
+               if word == checked_in[len(checked_in)-1] and len(checked_in) > 1:
+                   list_to_string = list_to_string + ' or ' + word
+               elif len(checked_in) == 1:
+                   list_to_string = word
+               else:
+                   list_to_string = list_to_string + word + ', '
+
+           redis_server.set('CHECKEDIN', list_to_string)
+           embed = discord.Embed(colour = discord.Colour.red())
+           embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
+           embed.add_field(name='Thanks For Visiting!!', value='Welcome to Senua Black!!  For immediate assistance regarding Warframe invites or any other questions you can private message {0}.  Feel free to also say hello in our main chat channel.  Once you have been made a member in Warframe you can change your status from visitor to member in Discord which will give you full access to the rest of our channels.'.format(list_to_string))
+           await member.send(embed=embed)
+
+       founders = discord.utils.get(server.roles, name='founders')
+       moderators = discord.utils.get(server.roles, name='moderators')
+       daytime = self._time_format()
+       check = ''
+       if redis_server.get('CHECK') == b'False':
+           check = 'There is currently no-one checked in for immediate assistance.'
+       else:
+           check = 'These are the current leaders checked in for immediate assistance: {0}'.format(redis_server.get('CHECKEDIN').decode('utf-8'))
+       try:
+           for founder in founders.members:
+               await founder.send('We have a visitor.  {0:{1}} arrived at {2} on {3}.  Please check and see if they need any assistance.  If they want to be a part of our Gaming Server all they need to do is type !register and hit [ENTER].  They can do this in any channel.  {4}'.format(member.name, len(member.name)-4, daytime[1], daytime[0], check))
+       except AttributeError:
+           pass
+       try:
+           for member in server.members:
+               for role in member.roles:
+                   if role.name == 'moderator':
+                       await moderator.send('We have a visitor.  {0:{1}} arrived at {2} on {3}.  Please make sure they have been welcomed.  If they decide to stay all they\'ll need to do is type !register and hit [ENTER].  They can do this in any channel.  {4}'.format(member.name, len(member.name)-4, daytime[1], daytime[0], check))
+       except AttributeError:
+           pass
+       channel = client.get_channel(519669330107957258)
+       embed = discord.Embed(colour = discord.Colour.red())
+       embed.set_thumbnail(url='https://i.imgur.com/7Cb9Rs9.jpg')
+       embed.add_field(name='Welcome!!', value='\n\nPlease welcome {0:{1}}!  They are visiting Senua Black Gaming.  If {0:{1}} have any questions please try your best to answer.'.format(member.name, len(member.name)-4))
+       await channel.send(embed=embed)
+
+
+   @commands.Cog.listener()
+   async def on_message(self, message):
+       m_min = '0200'
+       m_max = '1000'
+       m_reset = '1010'
+       m_now = datetime.datetime.now().strftime('%H%M')
+
+       if int(m_now) >= int(m_reset):
+           redis_server.set('MOTD', True)
+
+       if redis_server.get('MOTD') == b'True' and int(m_now) >= int(m_min) and int(m_now) <= int(m_max):
+           redis_server.set('MOTD', False)
+           channel = client.get_channel(594455094355820544)
+           embed = motd_embed()
+           await channel.send(embed=embed)
+           await client.process_commands(message)
+
+   @commands.command(pass_context=True)
+   async def guide(self, ctx, arg=None):
+       if arg is None:
+           await ctx.send(bot_help)
+       if arg is not None:
+           if arg.upper() == 'HELP':
+               await ctx.send(bot_help)
+
+   def _time_format(self):
+       hour_is = datetime.datetime.now().strftime('%H')
+       hour = (int(hour_is) + 7) - 12
+       if hour < 0:
+           hour = 24 + int(hour)
+       minute = datetime.datetime.now().strftime('%M')
+       day_int = datetime.datetime.now().strftime('%w')
+       days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+       day = days[int(day_int)]
+       time = '{0}:{1}'.format(hour, minute)
+       return [day, time]
+
+
+   @commands.command(pass_context=True, hidden=True)
+   async def hello(self, ctx, say=None, channel=None):
+       if channel is None:
+          channel = discord.client.get_channel(519669330107957258)
+       else:
+           server = ctx.message.guild
+           channel = discord.utils.get(server.channels, name=str(channel))
+       if say is None:
+           say = 'Hello!'
+       await channel.send('{0}'.format(arg))
+
+class Admin(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self._last_member = None
+
+
+    @commands.command(pass_context=True, hidden=True)
+    async def members(self, ctx, hidden=True, arg=None):
+        server = ctx.message.guild
+        members = []
         for member in server.members:
-            for role in member.roles:
-                if role.name == 'moderator':
-                    await moderator.send('We have a visitor.  {0:{1}} arrived at {2} on {3}.  Please make sure they have been welcomed.  If they decide to stay all they\'ll need to do is type !register and hit [ENTER].  They can do this in any channel'.format(member.name, len(member.name)-4, time, day))
-    except AttributeError:
-        pass
-    channel = client.get_channel(519669330107957258)
-    embed = discord.Embed(colour = discord.Colour.red())
-    embed.set_thumbnail(url='https://i.imgur.com/7Cb9Rs9.jpg')
-    embed.add_field(name='Welcome!!', value='\n\nPlease welcome {0:{1}}!  They are visiting Senua Black Gaming.  If {0:{1}} have any questions please try your best to answer.'.format(member.name, len(member.name)-4))
-    await channel.send(embed=embed)
+            members.append(member.name)
+        await ctx.send(members)
 
-
-@client.event
-async def on_message(message):
-    command = redis_server.get('COMMAND')
-    action = redis_server.get('ACTION')
-    print(command, action)
-    if command.upper() in message.upper():
-        await message.channel.send(action)
-    await client.process_commands(message)
-
-
-
-@client.event
-async def on_message(message):
-    m_min = '0200'
-    m_max = '1000'
-    m_reset = '1010'
-    m_now = datetime.datetime.now().strftime('%I%M')
-
-    if int(m_now) >= int(m_reset):
-        redis_server.set('MOTD', True)
-
-    if redis_server.get('MOTD') == b'True' \
-      and int(m_now) >= int(m_min) and int(m_now) <= int(m_max):
-        redis_server.set('MOTD', False)
-        channel = client.get_channel(519669330107957258)
-        embed = motd_embed()
-        await channel.send(embed=embed)
-
-    await client.process_commands(message)
 
 @client.command(pass_context=True)
-async def bot(ctx, arg=None):
-    if arg is None:
-        await ctx.send(bot_help)
-    if arg is not None:
-        if arg.upper() == 'PROFILE':
-            await ctx.send(profile_help)
+async def plagueis(ctx):
+    await ctx.send(darth)
 
-@client.command(pass_context=True)
-async def members(ctx, arg=None):
-    server = ctx.message.guild
-    members = []
-    for member in server.members:
-        members.append(member.name)
-    await ctx.send(members)
 
 @client.command(pass_context=True)
 async def profile(ctx, arg1=None, arg2=None):
@@ -196,7 +214,7 @@ async def profile(ctx, arg1=None, arg2=None):
     if x == 0:
         await ctx.send(profile_help)
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def auto_roler(ctx):
     server = client.get_guild(475488070704168990)
     log = client.get_channel(598088764778217472)
@@ -229,7 +247,7 @@ async def register(ctx, role=None):
         await author.remove_roles(removeRole)
         await ctx.send('The Member role was successfully added and the Visitor role has been removed.  Welcome!!')
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def member_check(ctx):
     server = ctx.message.guild
     leaders = [128536529348853760, 467319191691722768, 444149704889204736, 319974376357363715, 384875043357982732, 246492818049073162]
@@ -240,7 +258,7 @@ async def member_check(ctx):
                     leads = discord.utils.get(server.members, id=ids)
                     await leads.send('{0} still has the visitor role.  Can someone see if they need help?  If they don\'nt reply then go ahead and kick them from the server.'.format(member.name))
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def bot_comment(ctx):
     embed = discord.Embed(colour = discord.Colour.red())
     embed.set_thumbnail(url='https://i.imgur.com/t46ZqH2.png')
@@ -253,7 +271,7 @@ async def bot_comment(ctx):
     embed.add_field(name='Removing Roles', value=role_remove)
     await ctx.send(embed=embed)
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def game_roles(ctx):
     await ctx.send('**__List of Current Game Roles__**\n\n')
     for game in current_games:
@@ -299,14 +317,51 @@ async def on_raw_reaction_add(payload):
                 else:
                     await member.send('You already had {0} as a game role so nothing has been changed except the total count of members playing {1} which has been increased by one.'.format(game, game))
 
+@client.command(pass_context=True, hidden=True)
+async def check(ctx, arg=None):
+    channel = ctx.message.channel
+    if channel.name == 'leaders':
+        member = ctx.message.author
+        name = str(member.name)
+        if redis_server.get(name) == None or redis_server.get(name) == b'True':
+            redis_server.set(name, True)
+            available = 'checked in'
+        elif redis_server.get(name) == b'False':
+            available = 'checked out'
+        else:
+            available = 'not set yet'
+        if str(arg).upper() == 'IN':
+            redis_server.set(name, True)
+            available = 'checked in'
+            await ctx.send('Successfully {0}'.format(available))
+        elif str(arg).upper() == 'OUT':
+            redis_server.set(name, False)
+            available = 'checked out'
+            await ctx.send('Successfully {0}'.format(available))
+        else:
+            await ctx.send('Instructions for !check:\n\nMake yourself available for in-game Warframe invites and Discord support:  !check in\nTurn off all notifications regarding Warframe invites, Visitor status and Discord support:  !check out\n\nYour current availability status is {0}.'.format(available))
+    else:
+        await ctx.send('This command is only usable in the leaders channel.')
 
 @client.command(pass_context=True)
+async def leaders(ctx):
+    checked_in = []
+    server = ctx.message.guild
+    for role in server.roles:
+        if role.name == 'founders' or role.name == 'moderators':
+            for member in role.members:
+                if redis_server.get(member.name) == b'True':
+                    checked_in.append(member.name)
+    await ctx.send('The following leaders should be available for Warframe invites or any other questions you may have: {0}'.format(checked_in))
+
+
+@client.command(pass_context=True, hidden=True)
 async def blastmotd(ctx):
 	channel = client.get_channel(519669330107957258)
 	embed = motd_embed()
 	await channel.send(embed=embed)
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def motd(ctx, arg=None):
     embed = motd_embed()
     x = 0
@@ -349,8 +404,8 @@ async def warframe(ctx, arg=None):
     else:
         ctx_or = ctx
 
-    if arg is None:
-        await ctx_or.send('Using !warframe is easy!  Just type !warframe with any of the following commands: baro, earth, warmcycle, endless, fissures, darvo.\n\nFor example if we type: !warframe baro We get massive dissapointment!  That means it\'s working!!  Are you having fun???  I sure is.  And if you want.. you can take all the way to the bank.  The money bank.  Cause you can always count on a Cowboy. That\'s what they told me at least....\n\nDo you know who .. they are???')
+    if arg is None or arg.upper() == 'HELP':
+        await ctx_or.send('Using !warframe is easy!  Just type !warframe followed with any of the following commands: baro, earth, warmcycle, endless, fissures, darvo')
     if arg is not None:
         if arg.upper() == 'EARTH':
             req = Request('https://api.warframestat.us/pc/cetusCycle', headers={'User-Agent': 'Mozilla/5.0'})
@@ -420,14 +475,14 @@ async def warframe(ctx, arg=None):
                       data['item'], data['originalPrice'], data['salePrice'], totalLeft, data['eta']))
 
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def kill(ctx, arg=None):
 # Must be in #admin in order to use
     secure = ['roles', 'admin']
     if ctx.message.channel.name in secure:
         await client.logout()
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def wipe(ctx, lines=1):
 # 7 lines max and default is 1
     if lines <= 7:
@@ -447,7 +502,7 @@ def motd_embed():
 	embed = discord.Embed(colour = discord.Colour.red())
 	embed.set_thumbnail(url='https://i.imgur.com/6cyxnVY.png')
 	embed.add_field(name='Senua Black MOTD', value=clan.clan_priority)
-	embed.add_field(name='Current Research', value='We are currently researching Leaf Red Pigments which can be obtained by finding, fighting and defeating Stalker.  This is something that is best done with a full Clan squad that is well prepared.', inline=False)
+	embed.add_field(name='Current Research', value='We are currently researching Anti Violet.  The Pigments required are obtained from the Zanuka Hunter.  We need 10 total pigments.  Each Zanuka encounter only provides 1.  So we are going to need a lot of help getting all 10.  Let us know if you have any questions about how you can help.', inline=False)
 	return embed
 
 def no_bots(channelName):
@@ -459,5 +514,7 @@ def no_bots(channelName):
         return embed
     else:
         return None
-
+client.add_cog(Welcome(client))
+client.add_cog(Admin(client))
+client.add_cog(Test(client))
 client.run(redis_server.get('SENUA_TOKEN').decode('utf-8'))
