@@ -105,7 +105,7 @@ class Headquarters(commands.Cog):
     @commands.command(pass_context=True, hidden=True)
     async def check(self, ctx, arg=None):
         channel = ctx.message.channel
-        if channel.name == 'leaders':
+        if channel.name == 'leaders' or channel.name == 'leaders_check' or channel.name == 'admin':
             member = ctx.message.author
             name = str(member.name)
             if redis_server.get(name) == None or redis_server.get(name) == b'True':
@@ -126,7 +126,7 @@ class Headquarters(commands.Cog):
             else:
                 await ctx.send('Instructions for !check:\n\nMake yourself available for in-game Warframe invites and Discord support:  !check in\nTurn off all notifications regarding Warframe invites, Visitor status and Discord support:  !check out\n\nYour current availability status is {0}.'.format(available))
         else:
-            await ctx.send('This command is only usable in the leaders channel.')
+            await ctx.send('This command is only usable in the following channels: leaders, leaders_check, admin.')
 
     @commands.command(pass_context=True)
     async def leaders(self, ctx):

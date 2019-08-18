@@ -3,7 +3,7 @@ import datetime
 import discord
 from discord.ext import commands
 
-from admin.admin import redis_server
+from admin.admin import redis_server, client
 from admin.senua_db import User, Session, Base, Clan, engine
 from admin.strings import welcome, bot_help, profile_help, role_help, \
                           role_remove, current_games, full_game_names
@@ -80,6 +80,15 @@ class Welcome(commands.Cog):
         embed.add_field(name='Welcome!!', value='\n\nPlease welcome {0:{1}}!  They are visiting Senua Black Gaming.  If {0:{1}} have any questions please try your best to answer.'.format(member.name, len(member.name)-4))
         await channel.send(embed=embed)
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        contentString = message.content.upper()
+        if 'TURTLES' in str(contentString):
+            await ctx.send('first')
+            if message.author.name == 'withinmyself':
+                await ctx.send('second')
+                await message.channel.send('Turtle protocol activated.  Welcome back {0}'.format(message.author.name))
+        await client.process_commands(message)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -96,7 +105,7 @@ class Welcome(commands.Cog):
             channel = client.get_channel(594455094355820544)
             embed = motd_embed()
             await channel.send(embed=embed)
-            await client.process_commands(message)
+        await client.process_commands(message)
 
     @commands.command(pass_context=True)
     async def guide(self, ctx, arg=None):
