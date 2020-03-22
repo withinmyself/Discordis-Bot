@@ -1,4 +1,3 @@
-
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -10,19 +9,16 @@ engine = create_engine('postgresql://postgres:wastedPenguin27.@localhost:5432/di
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
-class Member(Base):
-        __tablename__ = 'members'
+class User(Base):
+        __tablename__ = 'users'
 
-        id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+        id = Column(Integer, Sequence('users_id_seq'), primary_key=True)
         user = Column(String)
         ign = Column(String)
-        planet = Column(String)
-        quest = Column(String)
-        priority = Column(String)
-        syndicate = Column(String)
+        game = Column(String)
+
         def __repr__(self):
-            return "<Member #{4}(User={0}, IGN={1}, Planet={2}, Quest={3}, Priority={5}, Syndicate={6})>".format(
-                                                                        self.user, self.ign, self.planet, self.quest, self.id, self.priority, self.syndicate)
+            return '<User: {0}, IGN:{1}, Game:{2})>'.format(self.user, self.ign, self.game)
 
 class Clan(Base):
         __tablename__ = 'clans'
@@ -40,19 +36,4 @@ class Clan(Base):
             return "<Clan #{5}(Clan Name={0}, Clan Tier={1}, Clan Level={2}, Clan Research={3}, Clan Resources={4}, Clan Priority={6})>".format(
                                                                                                 self.clan_name, self.clan_tier, self.clan_level, self.clan_research, self.clan_resources, self.id)
 
-
-class Alliance(Base):
-        __tablename__ = 'alliances'
-
-        id = Column(Integer, Sequence('alliance_id_seq'), primary_key=True)
-        member_count = Column(String)
-        clan_count = Column(String)
-        alliance_events = Column(String)
-
-        def __repr__(self):
-            return "<Alliance(Member Count={0}, Clan Count={1}, Alliance Events={2})>".format(
-                                                                    self.member_count, self.clan_count, self.alliance_events)
-        
-
 Base.metadata.create_all(engine)
-
