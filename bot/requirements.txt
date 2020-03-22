@@ -22,7 +22,7 @@ dhooks==1.1.0
 discord==1.0.1
 discord.py==1.2.3
 distro-info===0.18ubuntu0.18.04.1
-Flask==0.12.2
+Flask==1.0
 flask-heroku==0.1.9
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
