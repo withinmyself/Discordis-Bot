@@ -1,4 +1,4 @@
-aiohttp==3.5.4
+aiohttp==3.7.4
 altgraph==0.15
 amqp==2.2.2
 asn1crypto==0.24.0
