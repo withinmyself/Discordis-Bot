@@ -83,7 +83,7 @@ SQLAlchemy==1.2.5
 ssh-import-id==5.7
 style==1.1.0
 systemd-python==234
-Twisted==17.9.0
+Twisted==22.1.0
 typing-extensions==3.7.4
 ufw==0.35
 unattended-upgrades==0.1
